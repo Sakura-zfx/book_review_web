@@ -1,6 +1,6 @@
 <template>
   <div>
-    this is index page.
+    {{msg}}
   </div>
 </template>
 <script>
@@ -8,7 +8,18 @@ export default {
   name: 'index',
   data () {
     return {
-      
+      msg: '',
+    }
+  },
+  created () {
+    this.getLogout()
+  },
+  methods: {
+    getLogout() {
+      this.$axios.get('/api/logout/123456').then(res => {
+        console.log(res)
+        this.msg = res
+      })
     }
   }
 }
