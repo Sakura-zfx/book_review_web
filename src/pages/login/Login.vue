@@ -4,12 +4,12 @@
       <h3>用户登录系统</h3>
 
       <el-form-item prop="username">
-        <el-input type="text" v-model="LoginForm.username" placeholder="username">
+        <el-input type="text" v-model="LoginForm.identity" placeholder="username">
         </el-input>
       </el-form-item>
 
       <el-form-item prop="password">
-        <el-input type="password" v-model="LoginForm.password" placeholder="password">
+        <el-input type="password" v-model="LoginForm.credential" placeholder="password">
         </el-input>
       </el-form-item>
 
@@ -19,7 +19,7 @@
         </el-button>
         <hr>
         <p>
-          <span class="to" @click="toregin">立即注册</span>
+          <span class="to" @click="toregister">立即注册</span>
           <span class="to" @click="tofind">找回密码</span>
         </p>
       </el-form-item>
@@ -32,19 +32,19 @@
     data() {
       return {
         LoginForm: {
-          username: '',
-          password: '',
+          identity: '',
+          credential: '',
         },
         logining: false,
         rule: {
-          username: [{
+          identity: [{
             required: true,
             max: 14,
-            min: 7,
+            min: 5,
             message: '用户名是必须的，长度为5-14位',
             trigger: 'blur'
           }],
-          password: [{
+          credential: [{
             required: true,
             message: '密码是必须的！',
             trigger: 'blur'
@@ -60,12 +60,13 @@
             // console.log('开始请求后台数据，验证返回之类的操作！')
             // 登录作为参数的用户信息
             let LoginParams = {
-              username: this.LoginForm.username,
-              password: this.LoginForm.password
+              identity: this.LoginForm.identity,
+              credential: this.LoginForm.credential
             }
             // 调用axios登录接口
-            LoginUser(LoginParams).then(res => {
+            this.$axios.post('/api/login', this.qs.stringify(LoginParams)).then(res => {
               this.logining = false
+              console.log(res)
               // 根据返回的code判断是否成功
               let {
                 code,
@@ -85,7 +86,7 @@
                 // 将返回的数据注入sessionStorage
                 sessionStorage.setItem('user', JSON.stringify(user))
                 // 跳转到我的信息的页面
-                this.$router.push('/manger/my')
+                this.$router.push('/index')
               }
             })
           } else {
@@ -96,8 +97,8 @@
       reset() {
         this.$refs.LoginForm.resetFields()
       },
-      toregin() {
-        this.$router.push('/regin')
+      toregister() {
+        this.$router.push('/register')
       },
       tofind() {
         this.$router.push('/findpassword')

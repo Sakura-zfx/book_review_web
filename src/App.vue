@@ -13,11 +13,11 @@ export default {
 <style>
 @import './assets/scss/normalize.scss';
 @import './assets/scss/reset.scss';
+@import './assets/scss/iconfont/iconfont.css';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 </style>

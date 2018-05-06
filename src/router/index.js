@@ -17,139 +17,104 @@ import CateList from '../pages/admin/cate/CateList.vue'
 import CateCreate from '../pages/admin/cate/CateCreate.vue'
 import CommentList from '../pages/admin/comment/CommentList.vue'
 import Dashboard from '../pages/admin/Dashboard.vue'
+import Admin from '../pages/admin/index.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [{
-    path: '/index',
-    name: 'index',
-    component: Index
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: Register
-  },
-  // admin
-  {
-    path: '/admin',
-    name: 'admin',
-    children: [
-      // 基础设置管理
-      {
-        path: 'setting',
-        name: 'setting',
-        children: [
-          {
-            path: 'basic',
-            name: 'basic',
-            component: Basic
-          },
-          {
-            path: 'navigation',
-            name: 'navigation',
-            component: Navigation
-          }
-        ]
-      },
-      // 用户管理
-      {
-        path: 'user',
-        name: 'user',
-        children: [
-          {
-            path: 'list',
-            name: 'list',
-            component: UserList
-          },
-          {
-            path: 'create',
-            name: 'create',
-            component: UserCreate
-          },
-          {
-            path: 'modify-password',
-            name: 'modify-password',
-            component: ModifyPassword
-          }
-        ]
-      },
-      // 书籍管理
-      {
-        path: 'book',
-        name: 'book',
-        children: [
-          {
-            path: 'list',
-            name: 'list',
-            component: BookList
-          },
-          {
-            path: 'create',
-            name: 'create',
-            component: BookCreate
-          }
-        ]
-      },
-      // 标签管理
-      {
-        path: 'tag',
-        name: 'tag',
-        children: [
-          {
-            path: 'list',
-            name: 'list',
-            component: TagList
-          },
-          {
-            path: 'create',
-            name: 'create',
-            component: TagCreate
-          }
-        ]
-      },
-      // 分类管理
-      {
-        path: 'cate',
-        name: 'cate',
-        children: [
-          {
-            path: 'list',
-            name: 'list',
-            component: CateList
-          },
-          {
-            path: 'create',
-            name: 'create',
-            component: CateCreate
-          }
-        ]
-      },
-      // 评论管理
-      {
-        path: 'comment',
-        name: 'comment',
-        children: [
-          {
-            path: 'list',
-            name: 'list',
-            component: CommentList
-          }
-        ]
-      },
-      // 首页
-      {
-        path: '',
-        name: 'dashboard',
-        component: Dashboard
-      }
-    ]
-  }
+      path: '',
+      name: 'index',
+      component: Index
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
+    },
+    // admin
+    {
+      path: '/admin',
+      component: Admin,
+      children: [
+        // 基础设置管理
+        {
+          path: 'setting-basic',
+          name: 'setting-basic',
+          component: Basic
+        },
+        {
+          path: 'setting-navigation',
+          name: 'setting-navigation',
+          component: Navigation
+        },
+        // 用户管理
+        {
+          path: 'user-list',
+          name: 'user-list',
+          component: UserList
+        },
+        {
+          path: 'user-create',
+          name: 'user-create',
+          component: UserCreate
+        },
+        {
+          path: 'modify-password',
+          name: 'modify-password',
+          component: ModifyPassword
+        },
+        // 书籍管理
+        {
+          path: 'book-list',
+          name: 'book-list',
+          component: BookList
+        },
+        {
+          path: 'book-create',
+          name: 'book-create',
+          component: BookCreate
+        },
+        // 标签管理
+        {
+          path: 'tag-list',
+          name: 'tag-list',
+          component: TagList
+        },
+        {
+          path: 'tag-create',
+          name: 'tag-create',
+          component: TagCreate
+        },
+        // 分类管理
+        {
+          path: 'cate-list',
+          name: 'cate-list',
+          component: CateList
+        },
+        {
+          path: 'cate-create',
+          name: 'cate-create',
+          component: CateCreate
+        },
+        // 评论管理
+        {
+          path: 'comment-list',
+          name: 'comment-list',
+          component: CommentList
+        },
+        // 首页
+        {
+          path: '',
+          name: 'dashboard',
+          component: Dashboard
+        }
+      ]
+    }
   ]
 })
