@@ -4,14 +4,14 @@
       <el-col :span="12" class="col__item1">
         <img class="img" src="../../assets/icons/TB1tlVMcgmTBuNjy1XbXXaMrVXa-140-140.png" />
         <div class="browse__count">
-          <p>昨日浏览人数</p>
+          <p>昨日浏览次数</p>
           <span>233</span>
         </div>
       </el-col>
       <el-col :span="12" class="col__item1">
         <img class="img" src="../../assets/icons/TB1Py4_ceuSBuNjy1XcXXcYjFXa-142-140.png" />
         <div class="browse__count">
-          <p>总访问人数</p>
+          <p>总访问次数</p>
           <span>55312</span>
         </div>
       </el-col>

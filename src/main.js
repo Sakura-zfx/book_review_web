@@ -4,6 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from './utils/http'
+import dayjs from 'dayjs'
+import md5 from 'js-md5'
+import { Base64 } from 'js-base64'
+import Cookie from 'js-cookie'
+import localStore from './utils/localStorage'
 import {
   Pagination,
   Dialog,
@@ -151,6 +156,11 @@ Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 
 Vue.prototype.$axios = axios
+Vue.prototype.$dayjs = dayjs
+Vue.prototype.$md5 = md5
+Vue.prototype.$base64 = Base64
+Vue.prototype.$Cookie = Cookie
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -158,5 +168,15 @@ new Vue({
   components: {
     App
   },
-  template: '<App/>'
+  template: '<App/>',
+  created() {
+    this.checkLogin()
+  },
+  methods: {
+    checkLogin() {
+      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName'))) {
+        this.$router.push('/login')
+      }
+    }
+  }
 })

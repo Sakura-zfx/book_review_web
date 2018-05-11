@@ -1,14 +1,14 @@
 <template>
   <el-main class="login-container">
     <el-form :model="LoginForm" ref="LoginForm" :rules="rule" label-width="0" class="login-form">
-      <h3>用户登录系统</h3>
+      <h3 class="title">用户登录系统</h3>
 
-      <el-form-item prop="username">
+      <el-form-item prop="identity">
         <el-input type="text" v-model="LoginForm.identity" placeholder="username">
         </el-input>
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="credential">
         <el-input type="password" v-model="LoginForm.credential" placeholder="password">
         </el-input>
       </el-form-item>
@@ -19,7 +19,6 @@
         </el-button>
         <hr>
         <p>
-          <span class="to" @click="toregister">立即注册</span>
           <span class="to" @click="tofind">找回密码</span>
         </p>
       </el-form-item>
@@ -27,6 +26,7 @@
   </el-main>
 </template>
 <script>
+  import localStore from '../../utils/localStorage'
   export default {
     name: 'login',
     data() {
@@ -39,14 +39,14 @@
         rule: {
           identity: [{
             required: true,
-            max: 14,
             min: 5,
-            message: '用户名是必须的，长度为5-14位',
+            message: '用户名是必须的，长度不小于5位',
             trigger: 'blur'
           }],
           credential: [{
             required: true,
-            message: '密码是必须的！',
+            min: 8,
+            message: '密码是必须的，长度不小于8位',
             trigger: 'blur'
           }]
         }
@@ -57,36 +57,40 @@
         this.$refs.LoginForm.validate(valid => {
           if (valid) {
             this.logining = true
-            // console.log('开始请求后台数据，验证返回之类的操作！')
             // 登录作为参数的用户信息
             let LoginParams = {
               identity: this.LoginForm.identity,
-              credential: this.LoginForm.credential
+              credential: this.$md5(this.LoginForm.credential),
+              userRole: 2
             }
             // 调用axios登录接口
-            this.$axios.post('/api/login', this.qs.stringify(LoginParams)).then(res => {
+            this.$axios.post('/api/login', LoginParams).then(res => {
               this.logining = false
-              console.log(res)
-              // 根据返回的code判断是否成功
-              let {
+              const {
                 code,
-                msg,
-                user
-              } = res.data
+                msg
+              } = { ...res.data
+              }
               if (code !== 200) {
                 this.$message({
                   type: 'error',
                   message: msg
                 })
               } else {
+                localStore.set('jwt_token', {
+                  token: res.data.bean.token
+                })
                 this.$message({
                   type: 'success',
                   message: msg
                 })
-                // 将返回的数据注入sessionStorage
-                sessionStorage.setItem('user', JSON.stringify(user))
+                const userMsg = JSON.parse(this.$base64.decode(res.data.bean.token.split('.')[1]))
+                // 将返回的数据注入cookie
+                this.$Cookie.set('userId', userMsg.userId)
+                this.$Cookie.set('userName', userMsg.userName)
+                this.$Cookie.set('expires', userMsg.exp)
                 // 跳转到我的信息的页面
-                this.$router.push('/index')
+                this.$router.push('/admin')
               }
             })
           } else {
@@ -96,9 +100,6 @@
       },
       reset() {
         this.$refs.LoginForm.resetFields()
-      },
-      toregister() {
-        this.$router.push('/register')
       },
       tofind() {
         this.$router.push('/findpassword')
@@ -115,12 +116,15 @@
     background-image: url(../../assets/images/loginBG2.jpg);
     background-size: cover;
     .login-form {
-      margin: 20px auto;
+      margin: 80px auto;
       width: 320px;
       background: #fff;
       box-shadow: 0 0 35px #B4BCCC;
       padding: 30px 30px 0 30px;
       border-radius: 25px;
+      .title {
+        margin-bottom: 15px;
+      }
     }
     .submitBtn {
       width: 100%;

@@ -18,7 +18,12 @@ const localStore = {
     }
   },
   set: function (key, value) {
-    const value_str = JSON.stringify(value)
+    let value_str = ''
+    if (typeof value === 'object') {
+      value_str = JSON.stringify(value)
+    } else {
+      value_str = value
+    }
     localStorage.setItem(key, value_str);
   },
   remove: function (key) {

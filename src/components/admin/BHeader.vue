@@ -23,12 +23,15 @@
       </el-menu-item>
       <el-submenu index="">
         <template slot="title">
-          <img class="user__avatar" src="../../assets/icons/TB1tlVMcgmTBuNjy1XbXXaMrVXa-140-140.png" />
-          <span>{{userMsg.userName}}</span>
+          <div class="user__avatar" :style="noAvatar ? `background-color: #2dc888` : ''">
+            <span v-if="noAvatar" style="font-size: 12px;">{{userName.slice(-2)}}</span>           
+            <img v-else class="img" @error="handleImgError" :src="imgUrl"/>            
+          </div>
+          <span>{{userName}}</span>
         </template>
         <el-menu-item index="/admin/modify-password">密码修改</el-menu-item>
         <el-menu-item index="/admin/setting-basic">个人资料修改</el-menu-item>
-        <el-menu-item index="/login">退出</el-menu-item>
+        <el-menu-item index="/login" @click.native="logout">退出</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -37,30 +40,33 @@
 <script>
 import BLogo from './BLogo'
 import localStore from '../../utils/localStorage'
+import Cookie from '../../mixins/cookie'
   export default {
     name: 'b-header',
+    mixins: [Cookie],
     components: {
-      BLogo
+      BLogo,
     },
     data() {
       return {
-        userMsg: {},
+        noAvatar: false,
+        imgUrl: 'http://127.0.0.1:3000/uploads/1525890522518.png',
       }
     },
     computed: {
       activeIndex() {
         return this.$route.path
-      }
-    },
-    mounted() {
-      this.getUserMsg()
+      },
     },
     methods: {
-      getUserMsg() {
-        localStore.set('jwt_token', {userName: 'ssddadsa'})
-        const token = localStore.get('jwt_token')
-
-        this.userMsg = token
+      handleImgError() {
+        this.noAvatar = true
+      },
+      logout() {
+        this.$Cookie.remove('userId')
+        this.$Cookie.remove('userName')
+        this.$Cookie.remove('expires')        
+        localStore.remove('jwt_token')
       }
     }
   }
@@ -97,8 +103,16 @@ import localStore from '../../utils/localStorage'
         }
       }
       .user__avatar {
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        border-radius: 50%;
+        display: inline-block;
+        .img {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+        } 
       }
     }
   }

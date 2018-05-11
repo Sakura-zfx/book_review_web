@@ -2,7 +2,9 @@
 
 import axios from 'axios'
 import qs from 'qs'
+import Cookie from 'js-cookie'
 import localStore from './localStorage'
+import router from '../router/index'
 
 axios.defaults.timeout = 5000
 
@@ -10,7 +12,7 @@ axios.defaults.timeout = 5000
 axios.interceptors.request.use(
   config => {
     if (localStore.get('jwt_token')) {
-      config.headers.Authorization = `bearer ${localStore.get('jwt_token')}`
+      config.headers.Authorization = `bearer ${localStore.get('jwt_token').token}`
     }
     if (config.method.toLowerCase() === 'put' || config.method.toLowerCase() === 'post') {
       const data = config.data
@@ -34,10 +36,15 @@ axios.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 401 清除token信息并跳转到登录页面
+          Cookie.remove('userId')
+          Cookie.remove('userName')
+          Cookie.remove('expires')
           localStore.remove('jwt_token')
           router.replace({
             path: '/login',
-            query: { redirect: router.currentRoute.fullPath }
+            query: {
+              redirect: router.currentRoute.fullPath
+            }
           })
       }
     }
