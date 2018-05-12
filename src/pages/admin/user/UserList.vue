@@ -25,7 +25,7 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delUser(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="confirmDel(scope.row)" :disabled="canDel(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -53,7 +53,7 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delUser(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="confirmDel(scope.row)" :disabled="canDel(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,7 +81,7 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delUser(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="confirmDel(scope.row)" :disabled="canDel(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -109,7 +109,7 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delUser(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="confirmDel(scope.row)" :disabled="canDel(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -118,7 +118,7 @@
         <el-input slot="label" size="mini" prefix-icon="el-icon-search" clearable v-model="searchData" @change="querySearchAsync"
           placeholder="请输入内容">
         </el-input>
-        <el-table v-loading="loading" :data="searchList" style="width: 100%" :row-class-name="tableRowClassName">
+        <el-table v-loading="loading" :data="userList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
           <el-table-column fixed prop="nickName" label="用户名" width="90">
@@ -140,11 +140,14 @@
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="modifyUser(scope.row)" type="text" size="small">编辑</el-button>
-              <el-button @click="delUser(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="confirmDel(scope.row)" :disabled="canDel(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizes"
+        :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="userNum" style="margin-top: 15px;">
+      </el-pagination>
     </el-tabs>
     <el-dialog title="修改用户信息" :visible.sync="showModify">
       <el-form class="mod-form" v-loading="loading" :model="userMsg" :rules="rules" label-width="100px">
@@ -173,12 +176,18 @@
                 <el-option label="管理员" :value="2"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="状态" prop="status" required style="width: 300px">
+              <el-select v-model="userMsg.status">
+                <el-option label="正常" :value="0"></el-option>
+                <el-option label="封禁" :value="1"></el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
           <el-col :span="8">
             <p style="margin-bottom: 15px; text-align: left">用户头像：</p>
-            <el-upload class="avatar-uploader" :action="`/api/upload?userId=${userMsg.userId}`" :headers="headers" :show-file-list="false" :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl"  :src="imageUrl" class="avatar" />
+            <el-upload class="avatar-uploader" :action="`/api/upload?userId=${userMsg.userId}`" :headers="headers" :show-file-list="false"
+              :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-col>
@@ -211,6 +220,13 @@
         <el-button @click="showModify = false" size="small">取消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="删除用户" :visible.sync="showDel" style="width: 500px; left: 35%;">
+      <span>确定删除该用户吗？</span>
+      <span slot="footer">
+        <el-button size="mini" @click="showDel = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="delUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -223,6 +239,9 @@
     },
     data() {
       return {
+        currentPage: 1,
+        pageSizes: [10, 20, 30],
+        pageSize: 10,
         breadList: [{
           name: '首页',
           to: '/admin'
@@ -233,8 +252,10 @@
           to: '/admin/user-list'
         }],
         activeName: 'first',
+        userNum: 0,
         userList: [],
         searchData: '',
+        searchListTotal: [],
         searchList: [],
         loading: false,
         userMsg: {
@@ -258,7 +279,9 @@
         },
         rules: {
 
-        }
+        },
+        showDel: false,
+        delUserId: 0,
       }
     },
     created() {
@@ -277,10 +300,42 @@
         } else {
           return ''
         }
-      }
+      },
     },
     methods: {
-      getUserList(userRole) {
+      // 分页的操作
+      handleSizeChange(val) {
+        this.pageSize = val
+        if (this.activeName === 'fourth') {
+          this.getBanlist()
+        } else if (this.activeName === 'search') {
+          const start = (this.currentPage - 1) * this.pageSize
+          const end = (this.currentPage) * this.pageSize
+          this.searchList = this.searchListTotal.slice(start, end)
+        } else {
+          this.getUserList()
+        }
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        if (this.activeName === 'fourth') {
+          this.getBanlist()
+        } else if (this.activeName === 'search') {
+          const start = (this.currentPage - 1) * this.pageSize
+          const end = (this.currentPage) * this.pageSize
+          this.searchList = this.searchListTotal.slice(start, end)
+        } else {
+          this.getUserList()
+        }
+      },
+
+      canDel(row) {
+        return +row.userId === +this.$Cookie.get('userId')
+      },
+      getUserList() {
+        let userRole = this.activeName === 'first' ? 0 :
+          this.activeName === 'second' ? 1 :
+          this.activeName === 'third' ? 2 : ''
         if (this.loading) {
           return
         }
@@ -288,14 +343,16 @@
         this.$axios.get('/api/user/list', {
           params: {
             userRole: +userRole,
-            pageId: 1,
-            limit: 10
+            pageId: +this.currentPage,
+            limit: +this.pageSize
           }
         }).then(res => {
           this.userList = res.data.data
+          this.userNum = res.data.count
           this.loading = false
         })
       },
+      // 获取封禁用户列表
       getBanlist() {
         if (this.loading) {
           return
@@ -304,11 +361,12 @@
         this.$axios.get('/api/user/banlist', {
           params: {
             status: 1,
-            pageId: 1,
-            limit: 10,
+            pageId: +this.currentPage,
+            limit: +this.pageSize,
           }
         }).then(res => {
           this.userList = res.data.data
+          this.userNum = res.data.count          
           this.loading = false
         })
       },
@@ -334,22 +392,24 @@
           ''
       },
       handleClick(tab, event) {
-        if (tab.name === 'first') {
-          this.getUserList(0)
-        } else if (tab.name === 'second') {
-          this.getUserList(1)
-        } else if (tab.name === 'third') {
-          this.getUserList(2)
-        } else if (tab.name === 'fourth') {
+        this.userList = []
+        this.userNum = 0
+        this.currentPage = 1
+        this.pageSize = 10
+
+        if (tab.name === 'fourth') {
           this.getBanlist()
         } else if (tab.name === 'search') {
           this.querySearchAsync()
+        } else {
+          this.getUserList()
         }
       },
+      // 编辑用户
       modifyUser(row) {
         this.showModify = true
         this.userMsg = {
-          ...row
+          ...row,
         }
       },
       submit() {
@@ -359,9 +419,14 @@
         this.loading = true
         this.$axios.put('/api/user', this.userMsg).then(res => {
           this.loading = false
-          const {code, msg} = {...res.data}
+          const {
+            code,
+            msg
+          } = { ...res.data
+          }
           if (code === 200) {
             this.showModify = false
+            this.getUserList(0)
             this.$message({
               type: 'success',
               message: msg
@@ -374,6 +439,7 @@
           }
         })
       },
+      // 头像上传
       handleAvatarSuccess(res, file) {
         this.showAvatar = true
         this.userMsg.picture = res.filename
@@ -393,15 +459,27 @@
         }
         return isIMG && isLt2M
       },
-      delUser(row) {
+
+      // 删除用户
+      confirmDel(row) {
+        this.delUserId = +row.userId
+        this.showDel = true
+      },
+      delUser() {
         if (this.loading) {
           return
         }
         this.loading = true
-        this.$axios.delete(`/api/user/${+row.userId}`).then(res => {
-          const {code, msg} = {...res.data}
+        this.$axios.delete(`/api/user/${+this.delUserId}`).then(res => {
+          const {
+            code,
+            msg
+          } = { ...res.data
+          }
 
           if (code === 200) {
+            this.getUserList(0)
+            this.showDel = false
             this.$message.success(msg)
           } else {
             this.$message.error(msg)
@@ -419,7 +497,9 @@
             search: this.searchData
           }
         }).then(res => {
-          this.searchList = res.data.data
+          this.searchListTotal = res.data.data
+          this.userNum = res.data.data.length
+          this.searchList = this.searchListTotal.slice(0, this.pageSize)
           this.loading = false
         })
       },

@@ -72,6 +72,9 @@
         background: oldlace;
       }
     }
+    .el-dialog__header {
+      text-align: left;
+    }
   }
 
 </style>
