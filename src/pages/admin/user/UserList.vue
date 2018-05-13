@@ -6,7 +6,7 @@
         <el-table v-loading="loading" :data="userList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
-          <el-table-column fixed prop="nickName" label="用户名" width="90">
+          <el-table-column fixed prop="nickName" label="用户名" width="120">
           </el-table-column>
           <el-table-column prop="userRole" :formatter="formatUserRole" label="用户角色" width="80">
           </el-table-column>
@@ -34,7 +34,7 @@
         <el-table v-loading="loading" :data="userList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
-          <el-table-column fixed prop="nickName" label="用户名" width="90">
+          <el-table-column fixed prop="nickName" label="用户名" width="120">
           </el-table-column>
           <el-table-column prop="userRole" :formatter="formatUserRole" label="用户角色" width="80">
           </el-table-column>
@@ -62,7 +62,7 @@
         <el-table v-loading="loading" :data="userList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
-          <el-table-column fixed prop="nickName" label="用户名" width="90">
+          <el-table-column fixed prop="nickName" label="用户名" width="120">
           </el-table-column>
           <el-table-column prop="userRole" :formatter="formatUserRole" label="用户角色" width="80">
           </el-table-column>
@@ -90,7 +90,7 @@
         <el-table v-loading="loading" :data="userList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
-          <el-table-column fixed prop="nickName" label="用户名" width="90">
+          <el-table-column fixed prop="nickName" label="用户名" width="120">
           </el-table-column>
           <el-table-column prop="userRole" :formatter="formatUserRole" label="用户角色" width="80">
           </el-table-column>
@@ -121,7 +121,7 @@
         <el-table v-loading="loading" :data="searchList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
-          <el-table-column fixed prop="nickName" label="用户名" width="90">
+          <el-table-column fixed prop="nickName" label="用户名" width="120">
           </el-table-column>
           <el-table-column prop="userRole" :formatter="formatUserRole" label="用户角色" width="80">
           </el-table-column>

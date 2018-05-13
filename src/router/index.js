@@ -6,9 +6,9 @@ import Login from '../pages/login/Login.vue'
 import Register from '../pages/login/Register.vue'
 import Basic from '../pages/admin/setting/Basic.vue'
 import Navigation from '../pages/admin/setting/Navigation.vue'
+import ModifyPassword from '../pages/admin/setting/ModifyPassword.vue'
 import UserList from '../pages/admin/user/UserList.vue'
 import UserCreate from '../pages/admin/user/UserCreate.vue'
-import ModifyPassword from '../pages/admin/user/ModifyPassword.vue'
 import BookList from '../pages/admin/book/BookList.vue'
 import BookCreate from '../pages/admin/book/BookCreate.vue'
 import TagList from '../pages/admin/tag/TagList.vue'
@@ -53,6 +53,11 @@ export default new Router({
           name: 'setting-navigation',
           component: Navigation
         },
+        {
+          path: 'modify-password',
+          name: 'modify-password',
+          component: ModifyPassword
+        },
         // 用户管理
         {
           path: 'user-list',
@@ -63,11 +68,6 @@ export default new Router({
           path: 'user-create',
           name: 'user-create',
           component: UserCreate
-        },
-        {
-          path: 'modify-password',
-          name: 'modify-password',
-          component: ModifyPassword
         },
         // 书籍管理
         {

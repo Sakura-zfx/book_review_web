@@ -78,17 +78,17 @@
             }, {
               name: '添加用户',
               to: '/admin/user-create',
-            }, {
-              name: '修改密码',
-              to: '/admin/modify-password',
             }]
           },
           {
             name: '通用管理',
             icon: 'icon-shezhi',
             children: [{
-              name: '个人资料修改',
+              name: '修改个人资料',
               to: '/admin/setting-basic',
+            }, {
+              name: '修改密码',
+              to: '/admin/modify-password',
             }, {
               name: '菜单设置',
               to: '/admin/setting-navigation',
