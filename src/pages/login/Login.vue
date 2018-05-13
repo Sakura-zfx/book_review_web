@@ -39,8 +39,7 @@
         rule: {
           identity: [{
             required: true,
-            min: 5,
-            message: '用户名是必须的，长度不小于5位',
+            message: '用户名是必须的',
             trigger: 'blur'
           }],
           credential: [{

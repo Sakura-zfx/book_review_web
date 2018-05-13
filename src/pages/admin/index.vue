@@ -65,6 +65,9 @@
       padding: 15px 20px;
       background-color: #fff;
       border-radius: 5px;
+      .el-pagination {
+        text-align: center;
+      }
     }
     .el-table {
       text-align: left;

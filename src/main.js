@@ -169,12 +169,19 @@ new Vue({
     App
   },
   template: '<App/>',
-  created() {
-    this.checkLogin()
+  watch: {
+    // 监听路由
+    $route(to, from) {
+      // 后台登陆要检验
+      if (to.path.indexOf('/admin') >= 0) {
+        this.checkLogin()        
+      }
+    }
   },
   methods: {
     checkLogin() {
       if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName'))) {
+        console.log('a')        
         this.$router.push('/login')
       }
     }

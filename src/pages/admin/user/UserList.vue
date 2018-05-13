@@ -118,7 +118,7 @@
         <el-input slot="label" size="mini" prefix-icon="el-icon-search" clearable v-model="searchData" @change="querySearchAsync"
           placeholder="请输入内容">
         </el-input>
-        <el-table v-loading="loading" :data="userList" style="width: 100%" :row-class-name="tableRowClassName">
+        <el-table v-loading="loading" :data="searchList" style="width: 100%" :row-class-name="tableRowClassName">
           <el-table-column fixed prop="userId" label="ID" width="50">
           </el-table-column>
           <el-table-column fixed prop="nickName" label="用户名" width="90">
@@ -159,7 +159,7 @@
             </el-form-item>
 
             <el-form-item label="真实姓名" prop="tureName">
-              <el-input type="text" v-model="userMsg.tureName" placeholder="tureName">
+              <el-input type="text" v-model="userMsg.tureName" placeholder="trueName">
               </el-input>
             </el-form-item>
 
@@ -197,11 +197,11 @@
           </el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input type="text" v-model="userMsg.email">
+          <el-input type="text" v-model="userMsg.email" placeholder="绑定邮箱后才可修改" :disabled="!userMsg.email">
           </el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input type="text" v-model="userMsg.phone">
+          <el-input type="text" v-model="userMsg.phone" placeholder="绑定手机号码后才可修改" :disabled="!userMsg.phone">
           </el-input>
         </el-form-item>
         <el-form-item label="注册时间" prop="tureName">
@@ -285,7 +285,7 @@
       }
     },
     created() {
-      this.getUserList(0)
+      this.getUserList()
     },
     computed: {
       registerDate() {
@@ -426,7 +426,7 @@
           }
           if (code === 200) {
             this.showModify = false
-            this.getUserList(0)
+            this.getUserList()
             this.$message({
               type: 'success',
               message: msg

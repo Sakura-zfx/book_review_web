@@ -5,14 +5,14 @@
         <img class="img" src="../../assets/icons/TB1tlVMcgmTBuNjy1XbXXaMrVXa-140-140.png" />
         <div class="browse__count">
           <p>昨日浏览次数</p>
-          <span>233</span>
+          <span>{{yesterdayBrowse}}</span>
         </div>
       </el-col>
       <el-col :span="12" class="col__item1">
         <img class="img" src="../../assets/icons/TB1Py4_ceuSBuNjy1XcXXcYjFXa-142-140.png" />
         <div class="browse__count">
           <p>总访问次数</p>
-          <span>55312</span>
+          <span>{{totalBrowse}}</span>
         </div>
       </el-col>
     </el-row>
@@ -21,72 +21,73 @@
         <div class="grid__item">
           <h5 class="card__name">
             <span>图书统计</span>
-            <span>{{new Date()}}</span>
+            <span>{{currentTime}}</span>
           </h5>
-          <p class="card__number">9999</p>
+          <p class="card__number">{{bookTotal}}</p>
           <div class="intro">
             <div>
-              <p>9999</p>
+              <p>{{bookTotal}}</p>
               <p>当前图书总数</p>
             </div>
             <div>
-              <p>99999</p>
+              <p>{{tagTotal}}</p>
               <p>标签总数</p>
             </div>
-          </div>          
+          </div>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid__item">
           <h5 class="card__name">
             <span>书评统计</span>
-            <span>{{new Date()}}</span>
+            <span>{{currentTime}}</span>
           </h5>
-          <p class="card__number">9999</p>
+          <p class="card__number">{{bookReviewTotal}}</p>
           <div class="intro">
             <div>
-              <p>9999</p>
+              <p>{{bookReviewTotal}}</p>
               <p>当前书评总数</p>
             </div>
-          </div>          
-        </div>        
+          </div>
+        </div>
       </el-col>
       <el-col :span="8">
         <div class="grid__item">
           <h5 class="card__name">
             <span>注册人数统计</span>
-            <span>{{new Date()}}</span>
+            <span>{{currentTime}}</span>
           </h5>
-          <p class="card__number">9999</p>
+          <p class="card__number">{{userTotal}}</p>
           <div class="intro">
             <div>
-              <p>9999</p>
+              <p>{{userTotal}}</p>
               <p>当前系统注册人数</p>
             </div>
             <div>
-              <p>999</p>
+              <p>{{sevenDayActvie}}</p>
               <p>七日活跃人数</p>
             </div>
             <div>
-              <p>99</p>
+              <p>{{sevenDayAdd}}</p>
               <p>七日新增人数</p>
             </div>
           </div>
-        </div>        
-      </el-col>      
+        </div>
+      </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="grid__content">
-          <h4>最新书评</h4>
-          <ul>
-            <li v-for="(item, index) in bookReviewsList" :key="index">
-              <div>
-                <span>{item.title}</span>
+          <h4 style="text-align: left;">最新书评</h4>
+          <p v-if="bookReviewsList.length === 0" style="text-align: center;margin-top:30px;">暂无数据</p>
+          <ul v-else>
+            <li v-for="(item, index) in bookReviewsList" :key="index" class="review__item">
+              <div class="content">
+                <span>{{item.title}}</span>
                 <el-badge :value="item.count"></el-badge>
               </div>
               <span class="time">
-                {item.publishTime}
+                {{item.publishTime}}
               </span>
             </li>
           </ul>
@@ -94,14 +95,15 @@
       </el-col>
       <el-col :span="12">
         <div class="grid__content">
-          <h4>最新短评</h4>
-          <ul>
-            <li v-for="(item, index) in shortReviewsList" :key="index">
+          <h4 style="text-align: left;">最新短评</h4>
+          <p v-if="shortReviewsList.length === 0" style="text-align: center;margin-top:30px;">暂无数据</p>
+          <ul v-else>
+            <li v-for="(item, index) in shortReviewsList" :key="index" class="review__item">
               <span class="content">
-                {item.content}
+                {{item.content}}
               </span>
               <span class="time">
-                {item.publishTime}
+                {{item.publishTime}}
               </span>
             </li>
           </ul>
@@ -115,6 +117,15 @@
     name: 'dashboard',
     data() {
       return {
+        yesterdayBrowse: 0,
+        totalBrowse: 0,
+        currentTime: this.$dayjs().format('YYYY/MM/DD HH:mm:ss'),
+        bookTotal: 0,
+        tagTotal: 0,
+        bookReviewTotal: 0,
+        userTotal: 0,
+        sevenDayActvie: 0,
+        sevenDayAdd: 0,
         bookReviewsList: [],
         shortReviewsList: []
       }
@@ -148,19 +159,36 @@
       text-justify: unset;
     }
   }
+
   .grid__content {
     background-color: #fff;
     border-radius: 5px;
     min-height: 300px;
     padding: 15px 20px;
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
+    .review__item {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      .content {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: .5px;
+      }
+      .time {
+        white-space: nowrap;
+      }
+    }
   }
+
   .grid__item {
     background-color: rgb(49, 180, 141);
     border-radius: 5px;
     height: 140px;
-    padding: 15px 20px;    
+    padding: 15px 20px;
     margin-bottom: 20px;
     color: #ffffff;
     display: flex;
@@ -172,7 +200,7 @@
     .card__number {
       margin: 20px 0;
       font-size: 30px;
-      text-align: left;      
+      text-align: left;
     }
     .intro {
       display: flex;
@@ -186,4 +214,5 @@
       }
     }
   }
+
 </style>

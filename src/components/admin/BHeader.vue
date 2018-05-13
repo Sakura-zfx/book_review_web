@@ -108,6 +108,7 @@ import Cookie from '../../mixins/cookie'
         line-height: 36px;
         border-radius: 50%;
         display: inline-block;
+        text-align: center;
         .img {
           width: 36px;
           height: 36px;
