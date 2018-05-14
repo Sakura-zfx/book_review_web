@@ -54,6 +54,7 @@
 
   .admin__page {
     position: relative;
+    background-color: #2e323f;    
     min-height: 100vh;
     .el-aside {
       padding-left: 20px;

@@ -31,7 +31,7 @@
         </template>
         <el-menu-item index="/admin/modify-password">密码修改</el-menu-item>
         <el-menu-item index="/admin/setting-basic">个人资料修改</el-menu-item>
-        <el-menu-item index="/login" @click.native="logout">退出</el-menu-item>
+        <el-menu-item index="/admin/login" @click.native="logout">退出</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -50,7 +50,7 @@ import Cookie from '../../mixins/cookie'
     data() {
       return {
         noAvatar: false,
-        imgUrl: 'http://127.0.0.1:3000/uploads/1525890522518.png',
+        imgUrl: '',
       }
     },
     computed: {

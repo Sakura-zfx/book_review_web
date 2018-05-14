@@ -155,7 +155,7 @@
         this.$axios.post('/api/user', {
           identityType,
           identity,
-          credential,
+          credential: this.$md5(credential),
           userRole
         }).then(res => {
           const {

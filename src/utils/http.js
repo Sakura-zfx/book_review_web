@@ -40,12 +40,21 @@ axios.interceptors.response.use(
           Cookie.remove('userName')
           Cookie.remove('expires')
           localStore.remove('jwt_token')
-          router.replace({
-            path: '/login',
-            query: {
-              redirect: router.currentRoute.fullPath
-            }
-          })
+          if (router.currentRoute.fullPath.indexOf('admin') >= 0) {
+            router.replace({
+              path: '/admin/login',
+              query: {
+                redirect: router.currentRoute.fullPath
+              }
+            })
+          } else {
+            router.replace({
+              path: '/',
+              query: {
+                redirect: router.currentRoute.fullPath
+              }
+            })
+          }
       }
     }
     return Promise.reject(error.response.data)

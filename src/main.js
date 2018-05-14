@@ -180,9 +180,8 @@ new Vue({
   },
   methods: {
     checkLogin() {
-      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName'))) {
-        console.log('a')        
-        this.$router.push('/login')
+      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName'))) {       
+        this.$router.push('/admin/login')
       }
     }
   }

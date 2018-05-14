@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Index from '../pages/Index.vue'
-import Login from '../pages/login/Login.vue'
-import Register from '../pages/login/Register.vue'
+import ALogin from '../pages/admin/login/Login.vue'
+import Register from '../pages/front/login/Register.vue'
 import Basic from '../pages/admin/setting/Basic.vue'
 import Navigation from '../pages/admin/setting/Navigation.vue'
 import ModifyPassword from '../pages/admin/setting/ModifyPassword.vue'
@@ -28,16 +28,16 @@ export default new Router({
       component: Index
     },
     {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
       path: '/register',
       name: 'register',
       component: Register
     },
     // admin
+    {
+      path: '/admin/login',
+      name: 'login',
+      component: ALogin
+    },
     {
       path: '/admin',
       component: Admin,

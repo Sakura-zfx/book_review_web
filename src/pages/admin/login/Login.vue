@@ -18,15 +18,12 @@
           登录
         </el-button>
         <hr>
-        <p>
-          <span class="to" @click="tofind">找回密码</span>
-        </p>
       </el-form-item>
     </el-form>
   </el-main>
 </template>
 <script>
-  import localStore from '../../utils/localStorage'
+  import localStore from '../../../utils/localStorage'
   export default {
     name: 'login',
     data() {
@@ -40,13 +37,11 @@
           identity: [{
             required: true,
             message: '用户名是必须的',
-            trigger: 'blur'
           }],
           credential: [{
             required: true,
             min: 8,
             message: '密码是必须的，长度不小于8位',
-            trigger: 'blur'
           }]
         }
       }
@@ -112,7 +107,7 @@
   .login-container {
     width: 100vw;
     height: 100vh;
-    background-image: url(../../assets/images/loginBG2.jpg);
+    background-image: url(../../../assets/images/loginBG2.jpg);
     background-size: cover;
     .login-form {
       margin: 80px auto;
@@ -122,6 +117,7 @@
       padding: 30px 30px 0 30px;
       border-radius: 25px;
       .title {
+        text-align: center;
         margin-bottom: 15px;
       }
     }

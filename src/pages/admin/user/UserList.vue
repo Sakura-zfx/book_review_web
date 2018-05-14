@@ -471,6 +471,7 @@
         }
         this.loading = true
         this.$axios.delete(`/api/user/${+this.delUserId}`).then(res => {
+          this.loading = false          
           const {
             code,
             msg
@@ -478,13 +479,12 @@
           }
 
           if (code === 200) {
-            this.getUserList(0)
             this.showDel = false
+            this.getUserList()            
             this.$message.success(msg)
           } else {
             this.$message.error(msg)
           }
-          this.loading = false
         })
       },
       querySearchAsync() {
