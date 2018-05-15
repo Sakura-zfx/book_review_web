@@ -71,11 +71,12 @@
           const reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
           if (this.userMsg.checkPass !== '') {
             this.$refs.addForm.validateField('checkPass')
-            callback()
-          } else if (reg.test(this.userMsg.credential) === false) {
+          }
+          if (reg.test(this.userMsg.credential) === false) {
             callback(new Error('8-16字母和数字组成，不能是纯数字或纯英文'))
           }
         }
+        callback()
       }
       const validatePass2 = (rule, value, callback) => {
         if (value === '') {
@@ -129,8 +130,8 @@
         }).then(res => {
           this.verifyLoading = false
           if (res.data.code === -1) {
-            this.userExist = this.userMsg.identity          
-            this.$refs.addForm.validateField('identity')            
+            this.userExist = this.userMsg.identity
+            this.$refs.addForm.validateField('identity')
           }
         })
       },
@@ -172,12 +173,12 @@
               userRole: 2,
             }
             this.$message.success(msg)
-            this.$refs.addForm.resetFields()            
+            this.$refs.addForm.resetFields()
           } else {
             this.$message.error(msg)
             this.$refs.addForm.clearValidate('identity')
             this.userExist = true
-            this.$refs.addForm.validateField('identity')                    
+            this.$refs.addForm.validateField('identity')
           }
           this.loading = false
         })

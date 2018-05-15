@@ -160,7 +160,7 @@ Vue.prototype.$dayjs = dayjs
 Vue.prototype.$md5 = md5
 Vue.prototype.$base64 = Base64
 Vue.prototype.$Cookie = Cookie
-
+dayjs()
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -180,7 +180,7 @@ new Vue({
   },
   methods: {
     checkLogin() {
-      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName'))) {       
+      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName') && +this.$Cookie.get('userRole') === 2)) {       
         this.$router.push('/admin/login')
       }
     }

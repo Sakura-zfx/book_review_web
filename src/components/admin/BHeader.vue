@@ -65,7 +65,8 @@ import Cookie from '../../mixins/cookie'
       logout() {
         this.$Cookie.remove('userId')
         this.$Cookie.remove('userName')
-        this.$Cookie.remove('expires')        
+        this.$Cookie.remove('expires')
+        this.$Cookie.remove('userRole')
         localStore.remove('jwt_token')
       }
     }

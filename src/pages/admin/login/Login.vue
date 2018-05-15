@@ -5,11 +5,13 @@
 
       <el-form-item prop="identity">
         <el-input type="text" v-model="LoginForm.identity" placeholder="username">
+          <i slot="prefix" class="iconfont icon-user"></i>
         </el-input>
       </el-form-item>
 
       <el-form-item prop="credential">
         <el-input type="password" v-model="LoginForm.credential" placeholder="password">
+          <i slot="prefix" class="iconfont icon-password"></i>          
         </el-input>
       </el-form-item>
 
@@ -79,10 +81,12 @@
                   message: msg
                 })
                 const userMsg = JSON.parse(this.$base64.decode(res.data.bean.token.split('.')[1]))
+                const expires = new Date(this.$dayjs().add(userMsg.exp - userMsg.iat, 'seconds'))                
                 // 将返回的数据注入cookie
-                this.$Cookie.set('userId', userMsg.userId)
-                this.$Cookie.set('userName', userMsg.userName)
-                this.$Cookie.set('expires', userMsg.exp)
+                this.$Cookie.set('userId', userMsg.userId, {expires})
+                this.$Cookie.set('userName', userMsg.userName, {expires})
+                this.$Cookie.set('expires', userMsg.exp, {expires})
+                this.$Cookie.set('userRole', 2, {expires})
                 // 跳转到我的信息的页面
                 this.$router.push('/admin')
               }

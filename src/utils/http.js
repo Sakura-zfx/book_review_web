@@ -39,6 +39,7 @@ axios.interceptors.response.use(
           Cookie.remove('userId')
           Cookie.remove('userName')
           Cookie.remove('expires')
+          Cookie.remove('userRole')
           localStore.remove('jwt_token')
           if (router.currentRoute.fullPath.indexOf('admin') >= 0) {
             router.replace({
