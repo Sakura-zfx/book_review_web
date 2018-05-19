@@ -78,16 +78,18 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="grid__content">
-          <h4 style="text-align: left;">最新书评</h4>
+          <h4 style="text-align: left; margin-bottom: 10px;">最新书评</h4>
           <p v-if="bookReviewsList.length === 0" style="text-align: center;margin-top:30px;">暂无数据</p>
           <ul v-else>
             <li v-for="(item, index) in bookReviewsList" :key="index" class="review__item">
               <div class="content">
-                <span>{{item.title}}</span>
+                <router-link to="">{{item.nickName}}<span style="color: #000000;"> 发表书评 </span>{{item.bookName}}：{{item.title}}</router-link>
                 <el-badge :value="item.count"></el-badge>
               </div>
+              <span v-if="item.interest.score === 0" style="color: #FF6600;font-style: italic">未评分</span>
+              <span v-else v-html="score(item.interest.score)"></span>
               <span class="time">
-                {{item.publishTime}}
+                {{dayjs(item.publishTime)}}
               </span>
             </li>
           </ul>
@@ -95,15 +97,20 @@
       </el-col>
       <el-col :span="12">
         <div class="grid__content">
-          <h4 style="text-align: left;">最新短评</h4>
+          <h4 style="text-align: left; margin-bottom: 10px;">最新短评</h4>
           <p v-if="shortReviewsList.length === 0" style="text-align: center;margin-top:30px;">暂无数据</p>
           <ul v-else>
             <li v-for="(item, index) in shortReviewsList" :key="index" class="review__item">
-              <span class="content">
-                {{item.content}}
-              </span>
+              <router-link to="/admin/comment-list" class="content">
+                <span style="color: #000000;">{{item.nickName}}</span>
+                对
+                <span style="color: #000000;">{{item.bookName}}</span>
+                发表短评
+              </router-link>
+              <span v-if="item.interest.score === 0" style="color: #FF6600;font-style: italic">未评分</span>
+              <span v-else v-html="score(item.interest.score)"></span>
               <span class="time">
-                {{item.publishTime}}
+                {{dayjs(item.publishTime)}}
               </span>
             </li>
           </ul>
@@ -117,8 +124,8 @@
     name: 'dashboard',
     data() {
       return {
-        yesterdayBrowse: 0,
-        totalBrowse: 0,
+        yesterdayBrowse: 26,
+        totalBrowse: 1456,
         currentTime: this.$dayjs().format('YYYY/MM/DD HH:mm:ss'),
         bookTotal: 0,
         tagTotal: 0,
@@ -130,8 +137,38 @@
         shortReviewsList: []
       }
     },
+    created() {
+      this.getCount()
+      this.getCommentsNew()
+    },
     methods: {
-
+      dayjs(data) {
+        return this.$dayjs(data).format('YYYY/MM/DD HH:mm:ss')
+      },
+      score(data) {
+        data = (data.toFixed(2) + '').split('.')
+        return `<span class="score">${data[0]}<sup>.${data[1]}</sup></span>`
+      },
+      getCount() {
+        this.$axios.get('/api/datanumber').then(res => {
+          if (res.data.code === 200) {
+            this.bookTotal = res.data.data.book
+            this.userTotal = res.data.data.user.total
+            this.sevenDayActvie = res.data.data.user.last_7_active
+            this.sevenDayAdd = res.data.data.user.last_7_re
+            this.bookReviewTotal = res.data.data.comment
+            this.tagTotal = res.data.data.tag
+          }
+        })
+      },
+      getCommentsNew() {
+        this.$axios.get('/api/comment/new').then(res => {
+          if (res.data.code === 200) {
+            this.shortReviewsList = res.data.data.short_c
+            this.bookReviewsList = res.data.data.book_c
+          }
+        })
+      }
     }
   }
 
@@ -170,15 +207,22 @@
     justify-content: flex-start;
     .review__item {
       display: flex;
+      line-height: 24px;
+      font-size: 14px;
+      align-items: center;
       justify-content: space-between;
       margin-top: 5px;
+      * {
+        flex: 1;
+      }
       .content {
+        flex: 2;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        letter-spacing: .5px;
       }
       .time {
+        margin-left: 5px;
         white-space: nowrap;
       }
     }

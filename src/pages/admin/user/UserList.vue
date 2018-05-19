@@ -501,6 +501,9 @@
           this.userNum = res.data.data.length
           this.searchList = this.searchListTotal.slice(0, this.pageSize)
           this.loading = false
+          if (this.userNum === 0) {
+            this.$message('没有查询到相关用户')
+          }
         })
       },
     }

@@ -32,6 +32,41 @@ export default new Router({
       name: 'register',
       component: Register
     },
+    // {
+    //   path: '/billboard',
+    //   name: '',
+    //   component: ''
+    // },
+    // {
+    //   path: '/new',
+    //   name: '',
+    //   component: ''
+    // },
+    // {
+    //   path: '/recommendation',
+    //   name: '',
+    //   component: ''
+    // },
+    // {
+    //   path: '/search',
+    //   name: '',
+    //   component: ''
+    // },
+    // {
+    //   path: '/user-detail',
+    //   name: '',
+    //   component: ''
+    // },
+    // {
+    //   path: '/book-detail',
+    //   name: '',
+    //   component: ''
+    // },
+    // {
+    //   path: '/retrieve-password',
+    //   name: '',
+    //   component: ''
+    // },
     // admin
     {
       path: '/admin/login',

@@ -25,8 +25,18 @@
         </span>
       </el-menu-item>
       <div class="block"></div>
-      <el-input clearable placeholder="书籍名/作者" size="small" class="search" prefix-icon="el-icon-search" v-model="searchMsg">
-      </el-input>
+      <el-autocomplete 
+        placeholder="书籍名/作者" 
+        size="small" 
+        class="search" 
+        prefix-icon="el-icon-search" 
+        v-model="searchMsg"
+        :fetch-suggestions="querySearch"
+        :trigger-on-focus="false"
+        @keyup.enter.native="toSearchPage"
+        @select="handleSelect"
+      >
+      </el-autocomplete>
       <el-submenu v-if="isLogin" index="user">
         <template slot="title">
           <span style="color: #000000">{{userName}}</span>
@@ -48,7 +58,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="credential">
-          <el-input clearable type="password" v-model="loginMsg.credential" placeholder="密码">
+          <el-input clearable type="password" v-model="loginMsg.credential" @keyup.enter.native="postLogin" placeholder="密码">
             <i slot="prefix" class="iconfont icon-password"></i>
           </el-input>
         </el-form-item>
@@ -85,7 +95,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="checkPass">
-          <el-input clearable type="password" v-model="registerMsg.checkPass" placeholder="确认密码">
+          <el-input clearable type="password" v-model="registerMsg.checkPass" @keyup.enter.native="postRegister" placeholder="确认密码">
             <i slot="prefix" class="iconfont icon-password"></i>
           </el-input>
         </el-form-item>
@@ -154,6 +164,7 @@
         activeIndex: '/',
         userName: +this.$Cookie.get('userRole') === 1 ? this.$Cookie.get('userName') : '',
         searchMsg: '',
+        searchList: [],
         authCode: '',
         isLogin: !!(+this.$Cookie.get('userRole') === 1 && this.$Cookie.get('userId') && this.$Cookie.get('userName')),
         loginVisible: false,
@@ -294,7 +305,7 @@
         this.registerVisible = true
         setTimeout(() => {
           this.loginVisible = false
-          this.$refs.registerForm.resetFields()          
+          this.$refs.registerForm.resetFields()
         })
       },
       postRegister() {
@@ -340,6 +351,42 @@
         }).catch(error => {
           this.loading = false
           this.$message.error(error)
+        })
+      },
+      // 搜索
+      querySearch(queryString, cb) {
+        if (queryString) {
+          // 书籍查询
+          this.$axios.get('/api/book/search', {
+            params: {
+              searchMsg: queryString
+            }
+          }).then(res => {
+            const {code, msg} = {...res.data}
+
+            if (code === 200) {
+              this.searchList = res.data.data
+              this.searchList.forEach(item => {
+                item.value = `${item.bookName}${item.publishDate}--${item.author}`
+              })
+              cb(this.searchList)
+            }
+          }).catch(error => {
+            this.$message.error(error)
+          })
+        } else {
+          this.searchMsg = ''
+        }
+      },
+      handleSelect(item) {
+        console.log(item)
+      },
+      toSearchPage() {
+        this.$router.push({
+          path: '/search',
+          query: {
+            searchMsg: this.searchMsg
+          }
         })
       },
     }

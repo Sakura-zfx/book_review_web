@@ -35,7 +35,7 @@
             name: '图书管理',
             icon: 'icon-tushuguanlixitong',
             children: [{
-              name: '图书列表',
+              name: '搜索图书',
               to: '/admin/book-list',
             }, {
               name: '添加图书',

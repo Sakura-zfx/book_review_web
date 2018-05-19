@@ -10,7 +10,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 @import './assets/scss/normalize.scss';
 @import './assets/scss/reset.scss';
 @import './assets/scss/iconfont/iconfont.css';
@@ -19,5 +19,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-width: 850px;
+  .score {
+    font-size: 20px;
+    color: #FF6600;
+    font-style: italic;
+  }
 }
 </style>
