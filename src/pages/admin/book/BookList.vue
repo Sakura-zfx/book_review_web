@@ -11,10 +11,10 @@
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand" label-width="70px">
                 <el-form-item label="图书封面">
-                  <img class="book-cover" :src="picUrl(props.row.bookPic)"/>
+                  <img class="book-cover" :src="picUrl(props.row.bookPic)" />
                 </el-form-item>
                 <el-form-item label="图书简介">
-                  <span>{{ props.row.summary}}</span>                  
+                  <span>{{ props.row.summary}}</span>
                 </el-form-item>
                 <el-form-item label="图书 ID">
                   <span>{{ props.row.bookId }}</span>
@@ -51,8 +51,8 @@
           </el-table-column>
           <el-table-column prop="bookId" label="ID" width="50"></el-table-column>
           <el-table-column prop="bookName" label="图书名称"></el-table-column>
-          <el-table-column prop="avg" label="图书评分"></el-table-column>          
-          <el-table-column prop="publishHouse" label="出版地区" width="150"></el-table-column>
+          <el-table-column prop="avg" label="图书评分"></el-table-column>
+          <el-table-column prop="publishHouse" label="出版社" width="150"></el-table-column>
           <el-table-column prop="publishDate" label="出版时间" width="150"></el-table-column>
           <el-table-column prop="authorList" :formatter="formatAuthor" label="作者" width="180"></el-table-column>
           <el-table-column prop="price" :formatter="formatPrice" label="图书价格/元" width="120"></el-table-column>
@@ -65,72 +65,52 @@
         </el-table>
       </el-tab-pane>
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="pageSizes"
-        :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="bookNum" style="margin-top: 15px;">
+        :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total" style="margin-top: 15px;">
       </el-pagination>
     </el-tabs>
     <el-dialog title="修改图书信息" :visible.sync="showModify">
-      <el-form class="mod-form" v-loading="loading" :model="userMsg" :rules="rules" label-width="100px">
+      <el-form class="mod-form" v-loading="loading" :model="bookMsg" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="16">
-            <el-form-item label="昵称" prop="nickName" required>
-              <el-input type="text" v-model="userMsg.nickName" placeholder="nickName">
-              </el-input>
+            <el-form-item label="图书名称" prop="bookName" required>
+              <el-input type="text" v-model="bookMsg.bookName" placeholder="图书名称"></el-input>
             </el-form-item>
-
-            <el-form-item label="真实姓名" prop="tureName">
-              <el-input type="text" v-model="userMsg.tureName" placeholder="trueName">
-              </el-input>
+            <el-form-item label="ISBN10" prop="isbn10">
+              <el-input type="text" v-model="bookMsg.isbn10" placeholder="ISBN10"></el-input>
             </el-form-item>
-
-            <el-form-item label="性别" prop="userGender" style="width: 300px">
-              <el-select v-model="userMsg.userGender" placeholder="用户性别">
-                <el-option label="保密" value="secret"></el-option>
-                <el-option label="男" value="male"></el-option>
-                <el-option label="女" value="female"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="用户组" prop="userRole" required style="width: 300px">
-              <el-select v-model="userMsg.userRole" placeholder="选择用户组">
-                <el-option label="普通用户" :value="1"></el-option>
-                <el-option label="管理员" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="状态" prop="status" required style="width: 300px">
-              <el-select v-model="userMsg.status">
-                <el-option label="正常" :value="0"></el-option>
-                <el-option label="封禁" :value="1"></el-option>
-              </el-select>
+            <el-form-item label="ISBN13" prop="isbn13">
+              <el-input type="text" v-model="bookMsg.isbn13" placeholder="ISBN13"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <p style="margin-bottom: 15px; text-align: left">用户头像：</p>
-            <el-upload class="avatar-uploader" :action="`/api/upload?userId=${userMsg.userId}`" :headers="headers" :show-file-list="false"
+            <p style="margin-bottom: 15px; text-align: left">图书封面：</p>
+            <el-upload class="avatar-uploader" :action="`/api/upload?mark=book${bookMsg.bookId}`" :headers="headers" :show-file-list="false"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-col>
         </el-row>
-        <el-form-item label="地址" prop="address">
-          <el-input type="text" v-model="userMsg.address">
-          </el-input>
+        <el-form-item label="作者" prop="authorList">
+          <el-input type="text" v-model="bookMsg.authorList" placeholder="作者名称(以/分割)"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input type="text" v-model="userMsg.email" placeholder="绑定邮箱后才可修改" :disabled="!userMsg.email">
-          </el-input>
+        <el-form-item label="出版社" prop="publishHouse" >
+          <el-input type="text" v-model="bookMsg.publishHouse" placeholder="出版社名称"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input type="text" v-model="userMsg.phone" placeholder="绑定手机号码后才可修改" :disabled="!userMsg.phone">
-          </el-input>
+        <el-form-item label="出版年份" prop="publishDate" >
+          <el-input type="text" v-model="bookMsg.publishDate" placeholder="出版年份"></el-input>
         </el-form-item>
-        <el-form-item label="注册时间" prop="tureName">
-          <el-input type="text" v-model="registerDate" disabled>
-          </el-input>
+        <el-form-item label="页数" prop="pageNumber" >
+          <el-input type="text" v-model="bookMsg.pageNumber" placeholder="图书页数"></el-input>
         </el-form-item>
-
-        <el-form-item label="最后登录时间" prop="tureName">
-          <el-input type="text" v-model="lastLoginTime" disabled>
-          </el-input>
+        <el-form-item label="价格" prop="price" >
+          <el-input type="text" v-model="bookMsg.price" placeholder="图书价格/元"></el-input>
+        </el-form-item>
+        <el-form-item label="装帧" prop="binding" >
+          <el-input type="text" v-model="bookMsg.binding" placeholder="装帧方式(平装,精装等)"></el-input>
+        </el-form-item>
+        <el-form-item label="图书简介" prop="summary" >
+          <el-input type="textarea" autosize v-model="bookMsg.summary" placeholder="图书的简要介绍"></el-input>
         </el-form-item>
       </el-form>
 
@@ -143,7 +123,7 @@
       <span>确定删除该图书吗？</span>
       <span slot="footer">
         <el-button size="mini" @click="showDel = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="delUser">确 定</el-button>
+        <el-button size="mini" type="primary" @click="delBook">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -151,6 +131,7 @@
 <script>
   import BBreadcrumb from '../../../components/admin/BBreadcrumb'
   import pagination from '../../../mixins/pagination'
+  import localStore from '../../../utils/localStorage'
   export default {
     name: 'book-list',
     mixins: [pagination],
@@ -173,22 +154,40 @@
         bookMsg: {
           bookId: 0,
           bookName: '',
+          isbn10: '',
+          isbn13: '',
           bookPic: '',
-          author: '',
+          authorList: '',
           publishHouse: '',
           publishDate: '',
           pageNumber: 0,
           price: 0.00,
+          binding: '',
+          summary: '',
         },
-        bookNum: 0,
+        totalAuthorList: [],
         bookList: [],
         searchData: '',
         delBookId: 0,
         showModify: false,
         showDel: false,
+        headers: {
+          Authorization: `bearer ${localStore.get('jwt_token').token}`
+        },
       }
     },
-    created() {},
+    created() {
+
+    },
+    computed: {
+      imageUrl() {
+        if (this.bookMsg.bookPic) {
+          return `http://127.0.0.1:3000/uploads/${this.bookMsg.bookPic}`
+        } else {
+          return ''
+        }
+      },
+    },
     methods: {
       picUrl(url) {
         if (url) {
@@ -203,7 +202,11 @@
           if (index) {
             data += ' / '
           }
-          data += Object.values(item)
+          if (typeof item === 'object') {
+            data += Object.values(item)
+          } else {
+            data += item
+          }
         })
 
         return data
@@ -214,7 +217,11 @@
           if (index) {
             data += ' / '
           }
-          data += Object.values(item)
+          if (typeof item === 'object') {
+            data += Object.values(item)
+          } else {
+            data += item
+          }
         })
 
         return data
@@ -231,8 +238,87 @@
       handleClick() {
 
       },
-      modifyUser(row) {},
-      confirmDel(row) {},
+      // 封面上传
+      handleAvatarSuccess(res, file) {
+        this.bookMsg.bookPic = res.filename
+      },
+      beforeAvatarUpload(file) {
+        const IMG_LIST = ['jpg', 'png', 'image', 'gif', 'jpeg']
+        let isIMG = IMG_LIST.some(img => {
+          return file.type.toLowerCase().indexOf(img) >= 0
+        })
+        const isLt2M = file.size / 1024 / 1024 < 2
+
+        if (!isIMG) {
+          this.$message.error('请确认图片的格式！')
+        }
+        if (!isLt2M) {
+          this.$message.error('图片大小不能大于2M！')
+        }
+        return isIMG && isLt2M
+      },
+      modifyUser(row) {
+        this.showModify = true
+        this.bookMsg = {
+          ...row,
+          authorList: this.formatAuthor1(row.authorList)
+        }
+      },
+      submit() {
+        this.loading = true
+        this.$axios.put('/api/book', {
+          bookId: this.bookMsg.bookId,
+          isbn10: this.bookMsg.isbn10,
+          isbn13: this.bookMsg.isbn13,
+          bookName: this.bookMsg.bookName,
+          authorList: this.bookMsg.authorList,
+          bookPic: this.bookMsg.bookPic,
+          publishHouse: this.bookMsg.publishHouse,
+          publishDate: this.bookMsg.publishDate,
+          pageNumber: this.bookMsg.pageNumber,
+          price: this.bookMsg.price,
+          binding: this.bookMsg.binding,
+          summary: this.bookMsg.summary
+        }).then(res => {
+          const {code, msg} = {...res.data}
+          this.loading = false
+          if (code === 200) {
+            this.showModify = false
+            this.$message.success(msg)
+            this.querySearchAsync()
+          } else {
+            this.$message.error(msg)
+          }
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
+      },
+      confirmDel(row) {
+        this.showDel = true
+        this.delBookId = +row.bookId
+      },
+      delBook() {
+        this.loading = true
+        this.$axios.delete(`/api/book/${this.delBookId}`).then(res => {
+          const {
+            code,
+            msg
+          } = { ...res.data
+          }
+          this.loading = false
+          if (code === 200) {
+            this.$message.success(msg)
+            this.showDel = false
+            this.querySearchAsync()
+          } else {
+            this.$message.error(msg)
+          }
+        }).catch(err => {
+          this.loading = false
+          this.$message.error(err)
+        })
+      },
       // 搜索
       querySearchAsync() {
         if (this.loading || !this.searchData) {
@@ -248,11 +334,11 @@
         }).then(res => {
           this.loading = false
           if (res.data.code === 200) {
-            this.bookNum = res.data.count
+            this.total = res.data.count
             this.bookList = res.data.data
-            if (this.bookNum === 0) {
+            if (this.total === 0) {
               this.$message('没有查找到相关图书')
-            } 
+            }
           } else {
             this.$message.error(res.data.msg)
           }
@@ -284,6 +370,32 @@
     }
     span {
       color: blue;
+    }
+  }
+
+  .avatar-uploader {
+    border: 1px dashed #d9d9d9;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 112px;
+    height: 132px;
+    position: relative;
+    &:hover {
+      border-color: #409eff;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 110px;
+      height: 130px;
+      line-height: 130px;
+      text-align: center;
+    }
+    .avatar {
+      width: 110px;
+      height: 130px;
+      border-radius: 5px;
+      display: block;
     }
   }
 

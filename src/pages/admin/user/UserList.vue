@@ -185,7 +185,7 @@
           </el-col>
           <el-col :span="8">
             <p style="margin-bottom: 15px; text-align: left">用户头像：</p>
-            <el-upload class="avatar-uploader" :action="`/api/upload?userId=${userMsg.userId}`" :headers="headers" :show-file-list="false"
+            <el-upload class="avatar-uploader" :action="`/api/upload?mark=user${userMsg.userId}`" :headers="headers" :show-file-list="false"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
