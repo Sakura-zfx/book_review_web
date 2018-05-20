@@ -151,7 +151,7 @@
               binding: '',
               summary: '',
             }
-            this.$refs.addForm.resetFields()            
+            this.$refs.addForm.resetFields()
           } else {
             this.$message.error(msg)
           }
@@ -161,18 +161,19 @@
       },
       cancel() {
         this.bookMsg = {
-          bookName: '',
-          isbn10: '',
-          isbn13: '',
-          bookPic: '',
-          authorList: '',
-          publishHouse: '',
-          publishDate: '',
-          pageNumber: 0,
-          price: 0.00,
-          binding: '',
-          summary: '',
-        }
+            bookName: '',
+            isbn10: '',
+            isbn13: '',
+            bookPic: '',
+            authorList: '',
+            publishHouse: '',
+            publishDate: '',
+            pageNumber: 0,
+            price: 0.00,
+            binding: '',
+            summary: '',
+          },
+          this.$refs.addForm.resetFields()
       },
     }
   }
@@ -184,6 +185,7 @@
     border-radius: 5px;
     padding: 15px 20px;
   }
+
   .avatar-uploader {
     border: 1px dashed #d9d9d9;
     border-radius: 5px;
@@ -209,4 +211,5 @@
       display: block;
     }
   }
+
 </style>
