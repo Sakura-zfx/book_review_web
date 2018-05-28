@@ -21,7 +21,7 @@ export default {
       }, {
         name: '通用管理',
       }, {
-        name: '个人资料修改',
+        name: '修改个人资料',
         to: '/admin/setting-basic'
       }]
     }

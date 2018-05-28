@@ -6,7 +6,7 @@
         <el-input slot="label" size="mini" prefix-icon="el-icon-search" clearable v-model="searchData" @change="querySearchAsync"
           placeholder="请输入用户ID查询评论">
         </el-input>
-        <p>发表评论: 共 <span style="color: red;">{{commentList.length}}</span> 条</p>
+        <p>发表评论: 共 <span style="color: blue;">{{commentList.length}}</span> 条</p>
         <el-table v-loading="loading" :data="commentList" style="width:100%" stripe>
           <el-table-column type="expand">
             <template slot-scope="props">
@@ -30,7 +30,7 @@
           </el-table-column>
           <el-table-column label="评分">
             <template slot-scope="scope">
-              <span>{{scope.row.interest.score ? scope.row.interest.score : '未评分'}}</span>
+              <span>{{ (scope.row.interest && scope.row.interest.score) ? scope.row.interest.score : '未评分'}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="publishTime" :formatter="formatDate" label="评论时间"></el-table-column>
@@ -40,7 +40,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <p style="margin-top: 10px;">发表回复: 共 <span style="color: red;">{{replyList.length}}</span> 条</p>   
+        <p style="margin-top: 10px;">发表回复: 共 <span style="color: blue;">{{replyList.length}}</span> 条</p>   
         <el-table v-loading="loading" :data="replyList" style="width:100%" stripe>
           <el-table-column prop="id" label="回复 ID" width="80"></el-table-column>
           <el-table-column prop="fromUid" label="发表用户 ID" width="100"></el-table-column>

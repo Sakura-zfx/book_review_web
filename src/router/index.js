@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 import Index from '../pages/Index.vue'
 import ALogin from '../pages/admin/login/Login.vue'
-import Register from '../pages/front/login/Register.vue'
 import Basic from '../pages/admin/setting/Basic.vue'
 import Navigation from '../pages/admin/setting/Navigation.vue'
 import ModifyPassword from '../pages/admin/setting/ModifyPassword.vue'
@@ -18,55 +17,63 @@ import CateCreate from '../pages/admin/cate/CateCreate.vue'
 import CommentList from '../pages/admin/comment/CommentList.vue'
 import Dashboard from '../pages/admin/Dashboard.vue'
 import Admin from '../pages/admin/index.vue'
+import Billboard from '../pages/front/Billboard'
+import New from '../pages/front/New.vue'
+import Search from '../pages/front/Search'
+import BookDeatail from '../pages/front/BookDetail'
+import Recommendation from '../pages/front/Recommendation'
+import RetrievePassword from '../pages/front/RetrievePassword'
+import UserDetail from '../pages/front/UserDetail'
+import DefaultPage from '../pages/front/DefaultPage'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [{
       path: '',
-      name: 'index',
-      component: Index
+      component: Index,
+      children: [{
+          path: '/billboard',
+          name: 'billboard',
+          component: Billboard
+        },
+        {
+          path: '/new',
+          name: 'new',
+          component: New
+        },
+        {
+          path: '/recommendation',
+          name: 'recommendation',
+          component: Recommendation
+        },
+        {
+          path: '/search',
+          name: 'search',
+          component: Search
+        },
+        {
+          path: '/user-detail',
+          name: 'user-detail',
+          component: UserDetail
+        },
+        {
+          path: '/book-detail',
+          name: 'book-detail',
+          component: BookDeatail
+        },
+        {
+          path: '/retrieve-password',
+          name: 'retrieve-password',
+          component: RetrievePassword
+        },
+        {
+          path: '',
+          name: 'default-page',
+          component: DefaultPage
+        }
+      ]
     },
-    {
-      path: '/register',
-      name: 'register',
-      component: Register
-    },
-    // {
-    //   path: '/billboard',
-    //   name: '',
-    //   component: ''
-    // },
-    // {
-    //   path: '/new',
-    //   name: '',
-    //   component: ''
-    // },
-    // {
-    //   path: '/recommendation',
-    //   name: '',
-    //   component: ''
-    // },
-    // {
-    //   path: '/search',
-    //   name: '',
-    //   component: ''
-    // },
-    // {
-    //   path: '/user-detail',
-    //   name: '',
-    //   component: ''
-    // },
-    // {
-    //   path: '/book-detail',
-    //   name: '',
-    //   component: ''
-    // },
-    // {
-    //   path: '/retrieve-password',
-    //   name: '',
-    //   component: ''
-    // },
     // admin
     {
       path: '/admin/login',

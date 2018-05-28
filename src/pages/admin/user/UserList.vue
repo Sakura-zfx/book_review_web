@@ -492,7 +492,7 @@
           return
         }
         this.loading = true
-        this.searchData && this.$axios.get('/api/user/search', {
+        this.$axios.get('/api/user/search', {
           params: {
             search: this.searchData
           }

@@ -62,11 +62,11 @@
             <i slot="prefix" class="iconfont icon-password"></i>
           </el-input>
         </el-form-item>
-        <!-- <el-form-item prop="authCode">
+        <el-form-item prop="authCode">
           <el-input clearable v-model="authCode" placeholder="请输入右图验证码" style="width: 50%; margin-right: 5px;">
             <i slot="prefix" class="el-icon-edit"></i>
           </el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-button type="text" size="mini" style="margin-right: 20px;">忘记密码？找回密码</el-button>
         <el-button type="text" size="mini" @click="showRegister">还没账号？立即注册>></el-button>
       </el-form>
@@ -99,6 +99,11 @@
             <i slot="prefix" class="iconfont icon-password"></i>
           </el-input>
         </el-form-item>
+        <el-form-item prop="authCode">
+          <el-input clearable v-model="authCode" placeholder="请输入右图验证码" style="width: 50%; margin-right: 5px;">
+            <i slot="prefix" class="el-icon-edit"></i>
+          </el-input>
+        </el-form-item>
         <el-button type="text" size="mini" @click="showLogin">已有账号？去登录>></el-button>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -115,6 +120,7 @@
   } from '../../utils/validate'
   export default {
     name: 'f-header',
+    props: ['activeIndex'],
     data() {
       const validateName = (rule, value, callback) => {
         if (value === '') {
@@ -161,7 +167,6 @@
 
       }
       return {
-        activeIndex: '/',
         userName: +this.$Cookie.get('userRole') === 1 ? this.$Cookie.get('userName') : '',
         searchMsg: '',
         searchList: [],
@@ -216,6 +221,7 @@
         this.$Cookie.remove('userRole')
         localStore.remove('jwt_token')
         this.isLogin = false
+        this.$router.push('/')
       },
       resetMsg() {
         this.loginMsg = {
@@ -367,7 +373,7 @@
             if (code === 200) {
               this.searchList = res.data.data
               this.searchList.forEach(item => {
-                item.value = `${item.bookName}${item.publishDate}--${item.author}`
+                item.value = `${item.bookName} / ${item.authorList[0]}`
               })
               cb(this.searchList)
             }
@@ -379,9 +385,18 @@
         }
       },
       handleSelect(item) {
-        console.log(item)
+        this.searchMsg = ''
+        this.$router.push({
+          path: 'book-detail',
+          query: {
+            bookId: item.bookId
+          }
+        })
       },
       toSearchPage() {
+        if (!this.searchMsg) {
+          return
+        }
         this.$router.push({
           path: '/search',
           query: {

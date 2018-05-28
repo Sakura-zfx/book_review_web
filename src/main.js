@@ -160,6 +160,7 @@ Vue.prototype.$dayjs = dayjs
 Vue.prototype.$md5 = md5
 Vue.prototype.$base64 = Base64
 Vue.prototype.$Cookie = Cookie
+Vue.prototype.$localStore = localStore
 dayjs()
 /* eslint-disable no-new */
 new Vue({
@@ -175,6 +176,12 @@ new Vue({
       // 后台登陆要检验
       if (to.path.indexOf('/admin') >= 0) {
         this.checkLogin()        
+      } else if (+this.$Cookie.get('userRole') !== 1) {
+          this.$Cookie.remove('userId')
+          this.$Cookie.remove('userName')
+          this.$Cookie.remove('expires')
+          this.$Cookie.remove('userRole')
+          this.$localStore.remove('jwt_token')
       }
     }
   },

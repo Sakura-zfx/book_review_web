@@ -1,17 +1,15 @@
 <template>
-  
+  <div></div>
 </template>
 <script>
 export default {
-  name: 'register',
+  name: 'author-item',
+  props: ['authorMsg'],
   data () {
     return {
       
     }
   },
-  methods: {
-    
-  }
 }
 </script>
 <style lang="scss" scoped>

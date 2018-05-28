@@ -129,7 +129,7 @@
           }
         }).then(res => {
           this.verifyLoading = false
-          if (res.data.code === -1) {
+          if (res.data.code === -1004) {
             this.userExist = this.userMsg.identity
             this.$refs.addForm.validateField('identity')
           }

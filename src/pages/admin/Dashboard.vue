@@ -86,7 +86,7 @@
                 <router-link to="">{{item.nickName}}<span style="color: #000000;"> 发表书评 </span>{{item.bookName}}：{{item.title}}</router-link>
                 <el-badge :value="item.count"></el-badge>
               </div>
-              <span v-if="item.interest.score === 0" style="color: #FF6600;font-style: italic">未评分</span>
+              <span v-if="!item.interest" style="color: #FF6600;font-style: italic">未评分</span>
               <span v-else v-html="score(item.interest.score)"></span>
               <span class="time">
                 {{dayjs(item.publishTime)}}
@@ -107,7 +107,7 @@
                 <span style="color: #000000;">{{item.bookName}}</span>
                 发表短评
               </router-link>
-              <span v-if="item.interest.score === 0" style="color: #FF6600;font-style: italic">未评分</span>
+              <span v-if="!item.interest" style="color: #FF6600;font-style: italic">未评分</span>
               <span v-else v-html="score(item.interest.score)"></span>
               <span class="time">
                 {{dayjs(item.publishTime)}}

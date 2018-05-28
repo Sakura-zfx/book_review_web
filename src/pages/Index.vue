@@ -1,6 +1,6 @@
 <template>
   <div>
-    <f-header></f-header>
+    <f-header :active-index="activeIndex"></f-header>
     <router-view />
   </div>
 </template>
@@ -11,18 +11,39 @@ import FHeader from '../components/front/FHeader'
     components: {
       FHeader,
     },
+    created() {
+      this.activeIndex = this.$route.path
+    },
+    watch: {
+      $route(to, from) {
+        this.activeIndex = to.path
+        if (+this.$Cookie.get('userRole') !== 1) {
+          this.$Cookie.remove('userId')
+          this.$Cookie.remove('userName')
+          this.$Cookie.remove('expires')
+          this.$Cookie.remove('userRole')
+          this.$localStore.remove('jwt_token')
+        }
+      }
+    },
     data() {
       return {
 
       }
     },
-    created() {},
     methods: {
 
     }
   }
 
 </script>
-<style lang="scss" scoped>
-
+<style lang="scss">
+  .el-rate__icon {
+    font-size: 16px;
+    margin-right: 1px;
+  }
+  .el-rate__text {
+    margin-left: 5px;
+  }
 </style>
+

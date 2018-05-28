@@ -11,7 +11,8 @@
             <template slot-scope="props">
               <el-form label-position="left" inline class="demo-table-expand" label-width="70px">
                 <el-form-item label="图书封面">
-                  <img class="book-cover" :src="picUrl(props.row.bookPic)" />
+                  <img v-if="props.row.bookPic" class="book-cover" :src="picUrl(props.row.bookPic)" />
+                  <span v-else>暂无封面</span>
                 </el-form-item>
                 <el-form-item label="图书简介">
                   <span>{{ props.row.summary}}</span>
@@ -83,8 +84,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <p style="margin-bottom: 15px; text-align: left">图书封面：</p>
-            <el-upload class="avatar-uploader" :action="`/api/upload?mark=book${bookMsg.bookId}`" :headers="headers" :show-file-list="false"
+            <el-upload title="图书封面" class="avatar-uploader" :action="`/api/upload?mark=book${bookMsg.bookId}`" :headers="headers" :show-file-list="false"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -236,7 +236,8 @@
         this.querySearchAsync()
       },
       handleClick() {
-
+        this.pageSize = 10
+        this.currentPage = 1
       },
       // 封面上传
       handleAvatarSuccess(res, file) {
@@ -325,7 +326,7 @@
           return
         }
         this.loading = true
-        this.searchData && this.$axios.get('/api/book/search', {
+        this.$axios.get('/api/book/search', {
           params: {
             searchMsg: this.searchData,
             pageId: this.currentPage,
@@ -364,8 +365,8 @@
     margin-bottom: 0;
     width: 50%;
     .book-cover {
-      width: 110px;
-      height: 130px;
+      width: 120px;
+      height: 150px;
       border: 1px dashed #cccccc;
     }
     span {
@@ -377,8 +378,8 @@
     border: 1px dashed #d9d9d9;
     border-radius: 5px;
     cursor: pointer;
-    width: 112px;
-    height: 132px;
+    width: 122px;
+    height: 152px;
     position: relative;
     &:hover {
       border-color: #409eff;
@@ -386,14 +387,14 @@
     .avatar-uploader-icon {
       font-size: 28px;
       color: #8c939d;
-      width: 110px;
-      height: 130px;
-      line-height: 130px;
+      width: 120px;
+      height: 150px;
+      line-height: 150px;
       text-align: center;
     }
     .avatar {
-      width: 110px;
-      height: 130px;
+      width: 120px;
+      height: 150px;
       border-radius: 5px;
       display: block;
     }
