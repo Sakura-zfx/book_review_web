@@ -1,8 +1,7 @@
 <template>
   <div class="book">
     <div @click="gotoBookDetail(bookMsg.bookId)">
-      <img class="cover" slot="cover" v-if="bookMsg.bookPic" :title="bookMsg.bookName" :src="getCover(bookMsg.bookPic)" />
-      <img class="cover" slot="cover" v-else :title="bookMsg.bookName" src="../../assets/images/loginBG1.jpg" />
+      <slot name="cover"></slot>
     </div>
     <div class="intro">
       <div class="book-name" @click="gotoBookDetail(bookMsg.bookId)">{{bookMsg.bookName}}</div>
@@ -91,11 +90,6 @@
       .leave {
         font-size: 12px;
       }
-    }
-    .cover {
-      cursor: pointer;
-      width: 60px;
-      height: 80px;
     }
   }
 

@@ -25,11 +25,18 @@ import Recommendation from '../pages/front/Recommendation'
 import RetrievePassword from '../pages/front/RetrievePassword'
 import UserDetail from '../pages/front/UserDetail'
 import DefaultPage from '../pages/front/DefaultPage'
+import Page404 from '../pages/common/Page_404.vue'
 
 Vue.use(Router)
 
 export default new Router({
-  routes: [{
+  routes: [
+    {
+      path: '/404',
+      name: 'page-404',
+      component: Page404,
+    },
+    {
       path: '',
       component: Index,
       children: [{

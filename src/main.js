@@ -6,7 +6,9 @@ import router from './router'
 import axios from './utils/http'
 import dayjs from 'dayjs'
 import md5 from 'js-md5'
-import { Base64 } from 'js-base64'
+import {
+  Base64
+} from 'js-base64'
 import Cookie from 'js-cookie'
 import localStore from './utils/localStorage'
 import {
@@ -173,22 +175,36 @@ new Vue({
   watch: {
     // 监听路由
     $route(to, from) {
+      this.page_404()
       // 后台登陆要检验
       if (to.path.indexOf('/admin') >= 0) {
-        this.checkLogin()        
+        this.checkLogin()
       } else if (+this.$Cookie.get('userRole') !== 1) {
-          this.$Cookie.remove('userId')
-          this.$Cookie.remove('userName')
-          this.$Cookie.remove('expires')
-          this.$Cookie.remove('userRole')
-          this.$localStore.remove('jwt_token')
+        this.$Cookie.remove('userId')
+        this.$Cookie.remove('userName')
+        this.$Cookie.remove('expires')
+        this.$Cookie.remove('userRole')
+        this.$localStore.remove('jwt_token')
       }
     }
   },
+  created() {
+    this.page_404()
+  },
   methods: {
     checkLogin() {
-      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName') && +this.$Cookie.get('userRole') === 2)) {       
+      if (!(this.$Cookie.get('userId') && this.$Cookie.get('userName') && +this.$Cookie.get('userRole') === 2)) {
         this.$router.push('/admin/login')
+      }
+    },
+    page_404() {
+      if (this.$route.matched.length === 0) {
+        this.$router.push({
+          path: '/404',
+          query: {
+            url: window.location.href
+          }
+        })
       }
     }
   }

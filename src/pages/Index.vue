@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import FHeader from '../components/front/FHeader'
+  import FHeader from '../components/front/FHeader'
   export default {
     name: 'index',
     components: {
@@ -16,6 +16,14 @@ import FHeader from '../components/front/FHeader'
     },
     watch: {
       $route(to, from) {
+        if (this.$route.matched.length === 0) {
+          this.$router.push({
+            path: '/404',
+            query: {
+              url: window.location.href
+            }
+          })
+        }
         this.activeIndex = to.path
         if (+this.$Cookie.get('userRole') !== 1) {
           this.$Cookie.remove('userId')
@@ -42,8 +50,9 @@ import FHeader from '../components/front/FHeader'
     font-size: 16px;
     margin-right: 1px;
   }
+
   .el-rate__text {
     margin-left: 5px;
   }
-</style>
 
+</style>

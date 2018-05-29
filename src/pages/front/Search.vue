@@ -2,15 +2,11 @@
   <div class="main" v-loading="loading" :element-loading-text="loadingText">
     <h1 class="title">{{title}}</h1>
     <book-item v-for="item in bookList" :key="item.bookId" :book-msg="item">
+      <img class="cover" slot="cover" v-if="item.bookPic" :title="item.bookName" :src="`http://127.0.0.1:3000/uploads/${item.bookPic}`" />
+      <img class="cover" slot="cover" v-else :title="item.bookName" src="../../assets/images/book-default-lpic.gif" />
     </book-item>
-    <el-pagination
-      v-show="bookList.length !== 0"
-      layout="prev, pager, next"
-      :total="total"
-      background
-      @current-change="handleCurrentChange"
-      class="pagination"
-      >
+    <el-pagination v-show="bookList.length !== 0" layout="prev, pager, next" :total="total" background @current-change="handleCurrentChange"
+      class="pagination">
     </el-pagination>
   </div>
 </template>
@@ -103,6 +99,12 @@
       margin-top: 20px;
       margin-bottom: 20px;
     }
+  }
+
+  .cover {
+    cursor: pointer;
+    width: 60px;
+    height: 80px;
   }
 
 </style>
