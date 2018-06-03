@@ -7,7 +7,7 @@
       <div class="book-name" @click="gotoBookDetail(bookMsg.bookId)">{{bookMsg.bookName}}</div>
       <p class="author">{{author(bookMsg.authorList)}}</p>
       <p class="leave">{{leave(bookMsg)}}</p>
-      <p style="display:flex;">
+      <p v-if="showRate" style="display:flex;">
         <el-rate text-color="#e09015" v-model="avg" disabled>
         </el-rate>
         <span v-if="avg !== 0" style="font-size: 12px; line-height: 20px;">
@@ -22,7 +22,15 @@
 <script>
   export default {
     name: 'book-item',
-    props: ['bookMsg'],
+    props: {
+      bookMsg: {
+        type: Object
+      },
+      showRate: {
+        type: [Boolean, String],
+        default: true
+      }
+    },
     data() {
       return {
         avg: +this.bookMsg.avg
@@ -32,22 +40,25 @@
       getCover(url) {
         return `http://127.0.0.1:3000/uploads/${url}`
       },
-      author(data) {
+      author(val) {
+        if (typeof val === 'string') {
+          return val
+        }
         let temp = ''
-        if (data.length === 0) {
+        if (val.length === 0) {
           return '暂无作者信息'
         } else {
-          data.map((item, index) => {
+          val.map((item, index) => {
             temp += `${item} | `
           })
           return temp
         }
       },
-      leave(data) {
+      leave(val) {
         let msg = ''
-        const ph = data.publishHouse
-        const pd = data.publishDate
-        const price = data.price
+        const ph = val.publishHouse
+        const pd = val.publishDate
+        const price = val.price
         ph ? msg += `${ph} / ` : '';
         pd ? msg += `${pd} / ` : '';
         (price && +price !== 0) ? msg += price: msg += '暂无价格'

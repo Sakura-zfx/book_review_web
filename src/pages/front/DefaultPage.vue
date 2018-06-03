@@ -25,7 +25,8 @@
           <span @click="linkMore('hot')" class="link-more">查看更多...</span>
         </h1>
         <div class="hot-list">
-          <el-card v-for="item in hotList" :key="item.bookId" shadow="never" :body-style="{padding: '0', marginRight: '20px'}">
+          <div style="height: 200px" v-if="hotList.length === 0">暂无数据</div>        
+          <el-card v-else v-for="item in hotList" :key="item.bookId" shadow="never" :body-style="{padding: '0', marginRight: '20px'}">
             <book-item :book-msg="item">
               <img class="cover" slot="cover" v-if="item.bookPic" :title="item.bookName" :src="`http://127.0.0.1:3000/uploads/${item.bookPic}`"
               />
@@ -35,6 +36,9 @@
           </el-card>
         </div>
       </div>
+      <div class="hot-review">
+        
+      </div>
     </div>
     <div class="right">
       <div class="tag-list">
@@ -42,6 +46,14 @@
           热门标签
           <span @click="linkMore('tag')" class="link-more">所有标签...</span>          
         </h1>
+        <div style="height: 200px" v-if="tagList.length === 0">暂无数据</div>                
+        <div class="each-tag" v-else v-for="item in tagList" :key="item.cateId">
+          <p style="font-size: 14px;">{{item.cateName}}</p>
+          <el-tag type="info" size="small" v-for="tag in item.tags" :key="tag.id">
+            {{tag.tagName}}
+            <router-link v-if="tag.count" to="/">({{tag.count}})</router-link>                      
+          </el-tag>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +74,7 @@
     },
     created() {
       this.getHotList()
+      this.getTagList()
     },
     methods: {
       getNewList(pageId) {
@@ -84,7 +97,11 @@
         })
       },
       getTagList() {
-        this.$axios.get('/api/tag')
+        this.$axios.get('/api/tag').then(res => {
+          if (res.data.code === 200) {
+            this.tagList = res.data.data
+          }
+        })
       },
       freshNew(item) {
         this.getNewList(item + 1)
@@ -95,7 +112,7 @@
         } else if (data === 'hot') {
           this.$router.push('/billboard')
         } else if (data === 'tag') {
-          this.$router.push('/tag')
+          this.$router.push('/tag-search')
         }
       },
       gotoBookDetail(bookId) {
@@ -115,7 +132,14 @@
     width: 50%;
     border: 0;
   }
-
+  .el-tag {
+    margin: 5px 5px 5px 0;
+    color: #37a;
+  }
+  .each-tag {
+    padding-top: 10px;
+    border-bottom: 1px dashed #ccc;
+  }
   .cover {
     width: 90px;
     height: 130px;

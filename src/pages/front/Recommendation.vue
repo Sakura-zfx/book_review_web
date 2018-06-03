@@ -1,10 +1,10 @@
 <template>
   <div class="main" v-loading="loading" :element-loading-text="loadingText">
     <h1 class="title">{{title}}</h1>
-    <book-item v-for="item in bookList" :key="item.bookId" :book-msg="item">
+    <book-item v-if="bookList.length !== 0" v-for="item in bookList" :key="item.bookId" :book-msg="item">
       <img class="cover" slot="cover" v-if="item.bookPic" :title="item.bookName" :src="`http://127.0.0.1:3000/uploads/${item.bookPic}`" />
       <img class="cover" slot="cover" v-else :title="item.bookName" src="../../assets/images/book-default-lpic.gif" />
-      <span slot="priority" style="font-size: 14px; white-space: no-wrap;">推荐指数：{{(item.priority) * 100}}</span>
+      <span slot="priority" style="font-size: 14px; white-space: no-wrap;">推荐指数：{{((item.priority) * 100 ).toFixed(0)}}</span>
     </book-item>
   </div>
 </template>
@@ -21,13 +21,13 @@
         bookList: [],
         userId: +this.$Cookie.get('userId'),
         loading: false,
-        loadingText: '正在生成推荐...'
+        loadingText: '正在生成推荐...',
       }
     },
     // 页面权限验证
     beforeRouteEnter(to, from, next) {
       if (Cookie.get('userId')) {
-        next(true)
+        next()
       } else {
         next('/')
       }
@@ -53,24 +53,9 @@
         this.loading = true
         this.$axios.get(`/api/book/user/${this.userId}/recommendation`).then(res => {
           if (res.data.code === 200) {
-            this.loading = false
-            this.bookList = res.data.data.list
-          } else if (res.data.code === -2000) {
-            setTimeout(() => {
-              this.loading = true
-              this.loadingText = '正在生成首次推荐...'
-              // 初始化后重新获取推荐
-              this.$axios.get(`/api/book/user/${this.userId}/recommendation`).then(res1 => {
-                if (res1.data.code === 200) {
-                  this.bookList = res1.data.data.list
-                }
-                this.loading = false
-              }).catch(err => {
-                this.loading = false
-                this.$message.error(err)
-              })
-            }, 500)
+            this.bookList = res.data.data ? res.data.data.list : [] 
           }
+          this.loading = false          
         }).catch(err => {
           this.loading = false
           this.$message.error(err)
