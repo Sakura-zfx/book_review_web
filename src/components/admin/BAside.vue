@@ -89,9 +89,6 @@
             }, {
               name: '修改密码',
               to: '/admin/modify-password',
-            }, {
-              name: '菜单设置',
-              to: '/admin/setting-navigation',
             }]
           }
         ]

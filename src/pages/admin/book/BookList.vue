@@ -100,7 +100,7 @@
           <el-input type="text" v-model="bookMsg.publishHouse" placeholder="出版社名称"></el-input>
         </el-form-item>
         <el-form-item label="出版年份" prop="publishDate" >
-          <el-input type="text" v-model="bookMsg.publishDate" placeholder="出版年份"></el-input>
+          <el-input type="text" v-model="bookMsg.publishDate" placeholder="出版年份(xxxx-xx-xx)"></el-input>
         </el-form-item>
         <el-form-item label="页数" prop="pageNumber" >
           <el-input type="text" v-model="bookMsg.pageNumber" placeholder="图书页数"></el-input>

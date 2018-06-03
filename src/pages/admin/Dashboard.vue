@@ -83,7 +83,7 @@
           <ul v-else>
             <li v-for="(item, index) in bookReviewsList" :key="index" class="review__item">
               <div class="content">
-                <router-link :to="`/admin/comment-list?userId=${item.fromUid}`">{{item.nickName}}<span style="color: #000000;"> 发表书评 </span>{{item.bookName}}：{{item.title}}</router-link>
+                <router-link :title="`题目：${item.title}`" :to="`/admin/comment-list?userId=${item.fromUid}`">{{item.nickName}}<span style="color: #000000;"> 发表书评 </span>{{item.bookName}}：{{item.title}}</router-link>
                 <el-badge :value="item.count"></el-badge>
               </div>
               <span v-if="!item.interest || item.interest.score === 0" style="color: #FF6600;font-style: italic">未评分</span>
