@@ -15,7 +15,9 @@
                   <span v-else>暂无封面</span>
                 </el-form-item>
                 <el-form-item label="图书简介">
-                  <span>{{ props.row.summary}}</span>
+                  <div class="summary">
+                    <p v-for="(item, index) in formatSummary(props.row.summary)" :key="index" v-html="item"></p>
+                  </div>
                 </el-form-item>
                 <el-form-item label="图书 ID">
                   <span>{{ props.row.bookId }}</span>
@@ -189,6 +191,14 @@
       },
     },
     methods: {
+       formatSummary(val) {
+        if (val) {
+          const introList = val.split('#i#')
+          return introList
+        } else {
+          return ''
+        }
+      },
       picUrl(url) {
         if (url) {
           return `http://127.0.0.1:3000/uploads/${url}`
@@ -371,6 +381,15 @@
     }
     span {
       color: blue;
+    }
+    p {
+      color: blue;
+      text-indent: 2em;
+    }
+    .summary {
+      padding: 5px;
+      max-height: 200px;
+      overflow: auto;
     }
   }
 

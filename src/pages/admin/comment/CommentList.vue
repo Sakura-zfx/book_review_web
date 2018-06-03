@@ -3,7 +3,7 @@
     <b-breadcrumb :bread-list="breadList"></b-breadcrumb>
     <el-tabs v-model="activeName">
       <el-tab-pane name="search">
-        <el-input slot="label" size="mini" prefix-icon="el-icon-search" clearable v-model="searchData" @change="querySearchAsync"
+        <el-input slot="label" size="mini" autofocus prefix-icon="el-icon-search" clearable v-model="searchData" @change="querySearchAsync"
           placeholder="请输入用户ID查询评论">
         </el-input>
         <p>发表评论: 共 <span style="color: blue;">{{commentList.length}}</span> 条</p>
@@ -92,11 +92,16 @@
         activeName: 'search',
         showDel: false,
         loading: false,
-        searchData: '',
+        searchData: this.$route.query.userId || '',
         commentList: [],
         replyList: [],
         delId: 0,
         delType: 0,
+      }
+    },
+    created() {
+      if (this.searchData !== '') {
+        this.querySearchAsync()
       }
     },
     methods: {
