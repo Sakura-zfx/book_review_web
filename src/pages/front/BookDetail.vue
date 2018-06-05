@@ -90,11 +90,12 @@
           <el-rate disabled v-model="item.interest.score"></el-rate>
           <span>{{dayjs(item.publishTime)}}</span>
           <div style="margin-left: 20px;">
-            <el-button type="text" size="mini">评论</el-button>        
+            <el-button v-if="isMe(item.fromUid)" @click="delComment(item.id, 1)" type="text" size="mini">删除</el-button>
           </div>
         </div>
-        <p style="font-size: 14px; line-height: 1.5; margin-top: 5px;">{{item.content}}</p>
+        <p class="content" :title="item.content">{{item.content}}</p>
       </div>
+      <el-button v-if="shortCount > (10 * shortPage)" @click="watchMoreShort()" type="text" size="mini">查看更多......</el-button>      
     </div>
     <div class="book-breview">
       <h2 class="sub-title">
@@ -106,13 +107,15 @@
           <router-link :to="`/user-detail?userId=${item.fromUid}`">{{item.userName}}</router-link>
           <el-rate disabled v-model="item.interest.score"></el-rate>
           <span>{{dayjs(item.publishTime)}}</span>  
-          <div style="margin-left: 20px;">
-            <el-button type="text" size="mini">评论</el-button>        
+         <div style="margin-left: 20px;">
+            <el-button @click="gotoReview(item.id)" type="text" size="mini">回应({{item.replyCount}})</el-button>        
+            <el-button v-if="isMe(item.fromUid)" @click="delComment(item.id, 2)" type="text" size="mini">删除</el-button>
           </div>        
         </div>
         <p style="font-size: 14px; line-height: 1.5; margin-top: 5px;">书评题目：<span style="color: #37a;">{{item.title}}</span></p>
-        <p style="font-size: 14px; line-height: 1.5; margin-top: 5px;">书评内容：<span style="color: #37a;">{{item.content}}</span></p>
+        <p class="content" :title="item.content">书评内容：<span style="color: #37a;">{{item.content}}</span></p>
       </div>
+      <el-button v-if="bCount > (10 * bPage)" @click="watchMoreB()" type="text" size="mini">查看更多......</el-button>
     </div>
     <el-dialog title="发表短评" :visible.sync="isShowshortForm" @close="isShowshortForm = false; interest.score = score; interest.status = status; shortReview = '';"
       width="30%">
@@ -139,7 +142,7 @@
         <el-rate :disabled="interest.status === 'want'" v-model="interest.score" show-text></el-rate>
         <el-form-item label="输入短评">
           <el-input style="margin-bottom: 10px;" v-model="reviewTitle" placeholder="书评标题"></el-input>
-          <el-input v-model="bookReview" type="textarea" :rows="5" placeholder="书评内容"></el-input>
+          <el-input v-model="bookReview" type="textarea" :rows="5" placeholder="书评内容，段落前以#i#分割"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -180,8 +183,10 @@
         interest: {},
         tagList: [],
         shortCount: 0,
+        shortPage: 1,
         sReviewList: [],
         bCount: 0,
+        bPage: 1,
         bReviewList: [],
         shortReview: '',
         reviewTitle: '',
@@ -195,7 +200,6 @@
       }
     },
     computed: {
-
     },
     created() {
       this.getBookDetail()
@@ -208,6 +212,47 @@
       '$route': 'freshPage'
     },
     methods: {
+      watchMoreShort() {
+        this.shortPage++
+        this.getSReview()
+      },
+      watchMoreB() {
+        this.bPage++
+        this.getBReview()
+      },
+      delComment(id, type) {
+        this.$axios.delete(`/api/comment/${+id}`).then(res => {
+          const {code, msg} = {...res.data}
+          if (code === 200) {
+            if (type === 1) {
+              this.sReviewList = this.sReviewList.filter(item => {
+                return item.id !== id
+              })
+            } else {
+              this.bReviewList = this.bReviewList.filter(item => {
+                return item.id !== id
+              })
+            }
+
+            this.$message.success(msg)
+          } else {
+            this.$message.error(msg)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      gotoReview(id) {
+        this.$router.push({
+          path: '/review-detail',
+          query: {
+            commentId: +id
+          },
+        })
+      },
+      isMe(val) {
+        return this.userId === +val
+      },
       formatSummary(val) {
         if (val) {
           const introList = val.split('#i#')
@@ -336,6 +381,7 @@
             if (res.data.code === 200) {
               this.isShowshortForm = false
               this.shortReview = ''
+              this.shortPage = 1
               this.getSReview()
             }
             this.loading = false
@@ -363,6 +409,7 @@
             if (res.data.code === 200) {
               this.isShowbookForm = false
               this.bookReview = ''
+              this.bPage = 1
               this.getBReview()
             }
             this.loading = false
@@ -451,11 +498,16 @@
         this.$axios.get(`/api/book/${this.bookId}/comment`, {
           params: {
             topicId: 1,
+            pageId: this.shortPage,
             order: 'DESC',
           }
         }).then(res => {
           if (res.data.code === 200) {
-            this.sReviewList = res.data.data
+            if (this.sReviewList.length > 0 && this.shortPage !== 1) {
+              this.sReviewList = this.sReviewList.concat(res.data.data)
+            } else {
+              this.sReviewList = res.data.data
+            }
             this.shortCount = res.data.count
           }
         })
@@ -465,11 +517,16 @@
         this.$axios.get(`/api/book/${this.bookId}/comment`, {
           params: {
             topicId: 2,
+            pageId: this.bPage,
             order: 'DESC',
           }
         }).then(res => {
           if (res.data.code === 200) {
-            this.bReviewList = res.data.data
+            if (this.bReviewList.length > 0 && this.bPage !== 1) {
+              this.bReviewList = this.bReviewList.concat(res.data.data)
+            } else {
+              this.bReviewList = res.data.data
+            }
             this.bCount = res.data.count
           }
         })
@@ -480,6 +537,16 @@
 </script>
 <style lang="scss" scoped>
   @import '../../assets/scss/common.scss';
+  .content {
+    font-size: 14px; 
+    line-height: 1.5; 
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
   .each-s {
     width: 70%;
     padding: 15px 0;

@@ -16,9 +16,15 @@ export default {
   },
   methods: {
     gotoFirst() {
-      setTimeout(() => {
-        this.$router.replace('/')
-      }, 3000)
+      if (this.$route.query.url.indexOf('/admin') >= 0) {
+        setTimeout(() => {
+            this.$router.replace('/admin')
+        }, 3000)
+      } else {
+        setTimeout(() => {
+            this.$router.replace('/')
+        }, 3000)
+      }
     }
   }
 }

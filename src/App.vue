@@ -20,6 +20,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-width: 850px;
+  p {
+    word-break: break-all;
+  }
   .score {
     font-size: 20px;
     color: #FF6600;

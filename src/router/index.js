@@ -27,6 +27,7 @@ import UserDetail from '../pages/front/UserDetail'
 import DefaultPage from '../pages/front/DefaultPage'
 import Page404 from '../pages/common/Page_404.vue'
 import TagSearch from '../pages/front/TagSearch.vue'
+import ReviewDetail from '../pages/front/ReviewDetail.vue'
 
 Vue.use(Router)
 
@@ -59,6 +60,11 @@ export default new Router({
           path: '/tag-search',
           name: 'tag-search',
           component: TagSearch
+        },
+        {
+          path: '/review-detail',
+          name: 'review-detail',
+          component: ReviewDetail
         },
         {
           path: '/search',

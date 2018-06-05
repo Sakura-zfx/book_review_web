@@ -3,7 +3,7 @@
     <div class="left">
       <div class="title">
         <img v-if="userMsg.picture" class="little-avatar" :src="`http://127.0.01:3000/uploads/${userMsg.picture}`" />
-        <div v-else class="little-avatar fz14">{{userMsg.nickName}}</div>
+        <div v-else class="little-avatar fz14">{{(userMsg.nickName && userMsg.nickName.length > 3) ? userMsg.nickName.slice(-3) : userMsg.nickName}}</div>
         <div style="margin-left: 10px;">
           <p>
             <span style="color: #37a;">{{userMsg.nickName}}</span>的个人主页</p>
@@ -80,7 +80,8 @@
                 <router-link :to="`/user-detail?userId=${item.fromUid}`">{{item.userName}}</router-link>
                 <span>评论书籍：</span>
                 <router-link :to="`/book-detail?bookId=${item.bookId}`">{{item.bookName}}</router-link>
-                <el-rate disabled v-model="item.interest.score"></el-rate>
+                <el-rate v-if="item.interest" disabled v-model="item.interest.score"></el-rate>
+                <span v-else>还未进行评分</span>
                 <span>{{dayjs(item.publishTime, 'YYYY-MM-DD HH:mm:ss')}}</span>
               </div>
               <p style="font-size: 14px; line-height: 1.5; margin-top: 5px;">{{item.content}}</p>
@@ -99,7 +100,8 @@
             <router-link :to="`/user-detail?userId=${item.fromUid}`">{{item.userName}}</router-link>
             <span>评论书籍：</span>
             <router-link :to="`/book-detail?bookId=${item.bookId}`">{{item.bookName}}</router-link>
-            <el-rate disabled v-model="item.interest.score"></el-rate>
+            <el-rate v-if="item.interest" disabled v-model="item.interest.score"></el-rate>
+            <span v-else>还未进行评分</span>
             <span>{{dayjs(item.publishTime, 'YYYY-MM-DD HH:mm:ss')}}</span>
             <el-button type="text" size="mini" v-if="isMe" @click="delReview(item.id)">删除</el-button>
           </div>
@@ -118,6 +120,7 @@
         </div>
       </div>
       <div v-else-if="radio === 'want'" class="want">
+        <p v-if="wantCount === 0">该用户暂无标记为想读的图书</p>        
         <book-item v-for="item in wantList" :key="item.bookId" :book-msg="item.book" :show-rate="false">
           <img class="little-cover" slot="cover" v-if="item.book.bookPic" :title="item.book.bookName" :src="`http://127.0.0.1:3000/uploads/${item.book.bookPic}`"
           />
@@ -133,6 +136,7 @@
         </el-pagination>
       </div>
       <div v-else-if="radio === 'being'" class="being">
+        <p v-if="beingCount === 0">该用户暂无标记为在读的图书</p>        
         <book-item v-for="item in beingList" :key="item.bookId" :book-msg="item.book" :show-rate="false">
           <img class="little-cover" slot="cover" v-if="item.book.bookPic" :title="item.book.bookName" :src="`http://127.0.0.1:3000/uploads/${item.book.bookPic}`"
           />
@@ -150,6 +154,7 @@
         </el-pagination>
       </div>
       <div v-else-if="radio === 'read'" class="read">
+        <p v-if="readCount === 0">该用户暂无标记为已读的图书</p>
         <book-item v-for="item in readList" :key="item.bookId" :book-msg="item.book" :show-rate="false">
           <img class="little-cover" slot="cover" v-if="item.book.bookPic" :title="item.book.bookName" :src="`http://127.0.0.1:3000/uploads/${item.book.bookPic}`"
           />
@@ -176,7 +181,7 @@
         <el-col :span="12" class="fz14 intro">
           <p>昵称：{{userMsg.nickName}}</p>
           <p>性别：{{userMsg.userGender === 'male' ? '男' : userMsg.userGender === 'female' ? '女' : '保密'}}</p>
-          <p>生日：{{dayjs(new Date(userMsg.birth), 'YYYY年MM月DD日')}}</p>
+          <p>生日：{{userMsg.birth ? dayjs(new Date(userMsg.birth), 'YYYY年MM月DD日') : '无'}}</p>
           <p>地址：{{userMsg.address ? userMsg.address : '无'}}</p>
           <p>注册时间：{{dayjs(userMsg.registerDate, 'YYYY-MM-DD')}}</p>
           <el-button v-if="isMe" @click="modUser()" type="text" size="mini">修改个人资料>></el-button>
@@ -527,6 +532,14 @@
         if (this.userId !== +this.$Cookie.get('userId')) {
           this.$axios.get(`/api/user/other/${this.userId}`).then(res => {
             if (res.data.code === 200) {
+              if (!res.data.data) {
+                this.$router.push({
+                  path: '/404',
+                  query: {
+                    url: window.location.href
+                  }
+                })
+              }
               this.userMsg = res.data.data
             }
           })

@@ -9,13 +9,13 @@
           首页
         </span>
       </el-menu-item>
-      <el-menu-item index="/admin/fankui">
+      <el-menu-item index="/admin?index=1">
         <i class="iconfont icon-zhuzhanicon13"></i>
         <span slot="title">
           反馈
         </span>
       </el-menu-item>
-      <el-menu-item index="/admin/help">
+      <el-menu-item index="/admin?index=2">
         <i class="iconfont icon-bangzhu"></i>
         <span slot="title">
           帮助

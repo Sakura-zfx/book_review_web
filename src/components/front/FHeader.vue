@@ -294,12 +294,7 @@
             this.$Cookie.set('userRole', 1, {
               expires
             })
-
-            this.loginVisible = false
-            this.isLogin = true
-            this.userName = this.$Cookie.get('userName')
-            this.$message.success(msg)
-            this.resetMsg()
+            
             this.$router.go(0)
           } else {
             this.$message.error(msg)
