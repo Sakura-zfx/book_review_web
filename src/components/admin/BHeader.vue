@@ -30,7 +30,7 @@
           <span>{{userName}}</span>
         </template>
         <el-menu-item index="/admin/modify-password">密码修改</el-menu-item>
-        <el-menu-item index="/admin/setting-basic">个人资料修改</el-menu-item>
+        <!-- <el-menu-item index="/admin/setting-basic">个人资料修改</el-menu-item> -->
         <el-menu-item index="/admin/login" @click.native="logout">退出</el-menu-item>
       </el-submenu>
     </el-menu>

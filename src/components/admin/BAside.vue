@@ -58,17 +58,17 @@
               to: '/admin/cate-create'
             }]
           },
-          {
-            name: '标签管理',
-            icon: 'icon-biaoqianguanli',
-            children: [{
-              name: '标签列表',
-              to: '/admin/tag-list',
-            }, {
-              name: '添加标签',
-              to: '/admin/tag-create',
-            }]
-          },
+          // {
+          //   name: '标签管理',
+          //   icon: 'icon-biaoqianguanli',
+          //   children: [{
+          //     name: '标签列表',
+          //     to: '/admin/tag-list',
+          //   }, {
+          //     name: '添加标签',
+          //     to: '/admin/tag-create',
+          //   }]
+          // },
           {
             name: '用户管理',
             icon: 'icon-yonghuguanli',
@@ -83,10 +83,7 @@
           {
             name: '通用管理',
             icon: 'icon-shezhi',
-            children: [{
-              name: '修改个人资料',
-              to: '/admin/setting-basic',
-            }, {
+            children: [ {
               name: '修改密码',
               to: '/admin/modify-password',
             }]
