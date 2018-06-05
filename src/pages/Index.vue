@@ -1,7 +1,11 @@
 <template>
-  <div>
+  <div class="f-index">
     <f-header :active-index="activeIndex"></f-header>
-    <router-view />
+    <router-view style="flex: 1" />
+    <footer class="fz14">
+      <span>图书评论和推荐网站</span>
+      <span>© 2018 code by sakura-zfx</span>
+    </footer>
   </div>
 </template>
 <script>
@@ -54,5 +58,20 @@
   .el-rate__text {
     margin-left: 5px;
   }
-
+  .el-radio__input {
+    display: none;
+  }
+  .el-radio__label {
+    padding-left: 0;
+  }
+  .f-index {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    min-height: 100vh;
+    footer {
+      color: #999;
+      padding: 15px 0 15px 10%;
+    }
+  }
 </style>

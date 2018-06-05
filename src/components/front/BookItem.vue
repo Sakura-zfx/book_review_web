@@ -15,6 +15,7 @@
         </span>
         <span v-else style="font-size: 12px; color: #888; line-height: 20px;">(目前无人评价)</span>
       </p>
+      <slot name="other"></slot>
     </div>
     <slot name="priority"></slot>    
   </div>
@@ -42,8 +43,8 @@
       },
       author(val) {
         if (typeof val === 'string') {
-          return val
-        }
+          return val ? val : '暂无作者信息'
+        } 
         let temp = ''
         if (val.length === 0) {
           return '暂无作者信息'

@@ -41,8 +41,7 @@
         <template slot="title">
           <span style="color: #000000">{{userName}}</span>
         </template>
-        <el-menu-item index="user">个人主页</el-menu-item>
-        <el-menu-item index="user">账号管理</el-menu-item>
+        <el-menu-item :index="`/user-detail?userId=${userId}`">个人主页</el-menu-item>
         <el-menu-item index="" @click.native="logout">退出</el-menu-item>
       </el-submenu>
       <div v-else class="login__button">
@@ -167,7 +166,7 @@
 
       }
       return {
-        userName: +this.$Cookie.get('userRole') === 1 ? this.$Cookie.get('userName') : '',
+        userId: +this.$Cookie.get('userId'),
         searchMsg: '',
         searchList: [],
         authCode: '',
@@ -211,6 +210,11 @@
           }]
         },
         loading: false,
+      }
+    },
+    computed: {
+      userName() {
+        return +this.$Cookie.get('userRole') === 1 ? this.$Cookie.get('userName') : ''
       }
     },
     methods: {

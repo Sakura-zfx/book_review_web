@@ -158,8 +158,8 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="真实姓名" prop="tureName">
-              <el-input type="text" v-model="userMsg.tureName" placeholder="trueName">
+            <el-form-item label="真实姓名" prop="trueName">
+              <el-input type="text" v-model="userMsg.trueName" placeholder="trueName">
               </el-input>
             </el-form-item>
 
@@ -204,12 +204,12 @@
           <el-input type="text" v-model="userMsg.phone" placeholder="绑定手机号码后才可修改" :disabled="!userMsg.phone">
           </el-input>
         </el-form-item>
-        <el-form-item label="注册时间" prop="tureName">
+        <el-form-item label="注册时间" prop="registerDate">
           <el-input type="text" v-model="registerDate" disabled>
           </el-input>
         </el-form-item>
 
-        <el-form-item label="最后登录时间" prop="tureName">
+        <el-form-item label="最后登录时间" prop="lastLoginTime">
           <el-input type="text" v-model="lastLoginTime" disabled>
           </el-input>
         </el-form-item>
@@ -260,7 +260,7 @@
         loading: false,
         userMsg: {
           nickName: '',
-          tureName: '',
+          trueName: '',
           userGender: '',
           picture: '',
           phone: '',
