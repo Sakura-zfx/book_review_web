@@ -344,6 +344,7 @@
                 this.isShowshortForm = false
                 this.status = this.interest.status
                 this.score = this.interest.score
+                this.getBookDetail()
               }
               this.loading = false
             }).catch(err => {

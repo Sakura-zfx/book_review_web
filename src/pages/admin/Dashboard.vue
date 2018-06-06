@@ -124,8 +124,8 @@
     name: 'dashboard',
     data() {
       return {
-        yesterdayBrowse: 26,
-        totalBrowse: 1456,
+        yesterdayBrowse: 32,
+        totalBrowse: 1231,
         currentTime: this.$dayjs().format('YYYY/MM/DD HH:mm:ss'),
         bookTotal: 0,
         tagTotal: 0,

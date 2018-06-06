@@ -26,7 +26,7 @@
       </el-menu-item>
       <div class="block"></div>
       <el-autocomplete 
-        placeholder="书籍名/作者" 
+        placeholder="书籍名/作者/ISBN" 
         size="small" 
         class="search" 
         prefix-icon="el-icon-search" 
@@ -66,7 +66,7 @@
             <i slot="prefix" class="el-icon-edit"></i>
           </el-input>
         </el-form-item> -->
-        <el-button type="text" size="mini" style="margin-right: 20px;">忘记密码？找回密码</el-button>
+        <el-button type="text" size="mini" @click="resetPassword" style="margin-right: 20px;">忘记密码？找回密码</el-button>
         <el-button type="text" size="mini" @click="showRegister">还没账号？立即注册>></el-button>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -218,6 +218,11 @@
       }
     },
     methods: {
+      resetPassword() {
+        this.$router.push({
+          path: '/retrieve-password'
+        })
+      },
       logout() {
         this.$Cookie.remove('userId')
         this.$Cookie.remove('userName')

@@ -89,6 +89,10 @@
         return val === +this.$Cookie.get('userId')
       },
       reply(item, type) {
+        if (!this.$Cookie.get('userId')) {
+          this.$message('请登录后再进行回复')
+          return
+        }
         this.showForm = true
         if (type === 'comment') {
           this.replyMsg.replyId = this.commentId

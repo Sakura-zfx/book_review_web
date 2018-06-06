@@ -74,7 +74,7 @@
             <div class="each-review" v-for="item in reviewList" :key="item.id">
               <p style="margin-bottom: 5px;" class="fz14">
                 {{item.topicId === 1 ? '短评' : '书评:'}}
-                <router-link to="">{{item.title}}</router-link>
+                <router-link :to="`/review-detail?commentId=${item.id}`">{{item.title}}</router-link>
               </p>
               <div class="review-inner">
                 <router-link :to="`/user-detail?userId=${item.fromUid}`">{{item.userName}}</router-link>
@@ -84,7 +84,7 @@
                 <span v-else>还未进行评分</span>
                 <span>{{dayjs(item.publishTime, 'YYYY-MM-DD HH:mm:ss')}}</span>
               </div>
-              <p style="font-size: 14px; line-height: 1.5; margin-top: 5px;">{{item.content}}</p>
+              <p class="content" :title="item.content" style="font-size: 14px; line-height: 1.5; margin-top: 5px;">{{item.content}}</p>
             </div>
           </div>
         </div>
@@ -94,7 +94,7 @@
         <div class="each-review" v-for="item in reviewList" :key="item.id">
           <p style="margin-bottom: 5px;" class="fz14">
             {{item.topicId === 1 ? '短评' : '书评:'}}
-            <router-link to="">{{item.title}}</router-link>
+            <router-link :to="`/review-detail?commentId=${item.id}`">{{item.title}}</router-link>
           </p>
           <div class="review-inner">
             <router-link :to="`/user-detail?userId=${item.fromUid}`">{{item.userName}}</router-link>
@@ -105,7 +105,7 @@
             <span>{{dayjs(item.publishTime, 'YYYY-MM-DD HH:mm:ss')}}</span>
             <el-button type="text" size="mini" v-if="isMe" @click="delReview(item.id)">删除</el-button>
           </div>
-          <p style="font-size: 14px; line-height: 1.5; margin-top: 5px;">{{item.content}}</p>
+          <p class="content" style="font-size: 14px; line-height: 1.5; margin-top: 5px;">{{item.content}}</p>
         </div>
         <p style="margin-top: 20px;">回复......</p>
         <div class="each-review" v-for="item in replyList" :key="item.id">
@@ -601,6 +601,16 @@
 
 </script>
 <style lang="scss" scoped>
+  .content {
+    font-size: 14px; 
+    line-height: 1.5; 
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
   .avatar-uploader {
     border: 1px dashed #d9d9d9;
     border-radius: 5px;
