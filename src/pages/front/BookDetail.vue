@@ -357,8 +357,9 @@
             }).then(res => {
               if (res.data.code === 200) {
                 this.isShowshortForm = false
-                this.status = this.interest.status
-                this.score = this.interest.score
+                this.getInterest()
+                // this.status = this.interest.status
+                // this.score = this.interest.score
               }
               this.loading = false
             }).catch(err => {
